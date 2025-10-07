@@ -1,0 +1,22 @@
+<div class="list-wrap">
+  <div class="list-header">
+    <h3>Vacunas aplicadas</h3>
+    <a routerLink="/vacunas/form" class="btn small">➕ Registrar</a>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr><th>ID</th><th>Paciente</th><th>Vacuna</th><th>Dosis</th><th>Lote</th><th>Fecha</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of vacunas">
+        <td>{{v.id}}</td>
+        <td>{{v.usuario}}</td>
+        <td>{{v.nombre_vacuna}}</td>
+        <td>{{v.dosis}}</td>
+        <td>{{v.lote}}</td>
+        <td>{{v.fecha}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

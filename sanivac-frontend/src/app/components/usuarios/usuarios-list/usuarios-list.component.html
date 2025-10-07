@@ -1,0 +1,21 @@
+<div class="list-wrap">
+  <div class="list-header">
+    <h3>Lista de Usuarios</h3>
+    <a routerLink="/usuarios/form" class="btn small">➕ Nuevo</a>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr><th>ID</th><th>Documento</th><th>Nombre</th><th>Edad</th><th>Teléfono</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuarios">
+        <td>{{u.id}}</td>
+        <td>{{u.numero_id}}</td>
+        <td>{{u.nombre}}</td>
+        <td>{{u.edad}}</td>
+        <td>{{u.telefono}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

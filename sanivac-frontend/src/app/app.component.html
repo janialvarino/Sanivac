@@ -1,0 +1,23 @@
+<div class="app-shell">
+  <!-- 🔹 Navbar solo aparece si NO estamos en login -->
+  <nav class="nav" *ngIf="!isLoginRoute()">
+    <a routerLink="/dashboard" class="logo">
+      <img src="assets/logo.png" alt="Logo Sanivac" height="30" />
+      Sanivac
+    </a>
+    <div class="links">
+      <a routerLink="/usuarios">Usuarios</a>
+      <a routerLink="/vacunas">Vacunas</a>
+      <a routerLink="/inventario">Inventario</a>
+      <a routerLink="/alarmas">Alarmas</a>
+      <a routerLink="/reportes">Reportes</a>
+      <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+    </div>
+  </nav>
+
+  <!-- 🔹 Aquí carga el login o el resto de vistas -->
+  <main class="main">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+

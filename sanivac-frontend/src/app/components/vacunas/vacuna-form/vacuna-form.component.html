@@ -1,0 +1,24 @@
+<div class="form-card">
+  <h3>Registrar vacuna aplicada</h3>
+  <form (ngSubmit)="guardar()">
+    <label>ID usuario</label>
+    <input [(ngModel)]="vacuna.usuario_id" name="usuario_id" />
+    <label>Vacuna</label>
+    <input [(ngModel)]="vacuna.nombre_vacuna" name="nombre_vacuna" required />
+    <label>Dosis</label>
+    <input [(ngModel)]="vacuna.dosis" name="dosis" />
+    <label>Lote</label>
+    <input [(ngModel)]="vacuna.lote" name="lote" />
+    <label>Fecha aplicación</label>
+    <input [(ngModel)]="vacuna.fecha_aplicacion" name="fecha_aplicacion" type="date" />
+    <label>Responsable</label>
+    <input [(ngModel)]="vacuna.responsable" name="responsable" />
+    <label>Observaciones</label>
+    <textarea [(ngModel)]="vacuna.observaciones" name="observaciones"></textarea>
+
+    <div class="actions">
+      <button class="btn-primary" type="submit">Guardar</button>
+      <a class="btn-outline" routerLink="/vacunas">Cancelar</a>
+    </div>
+  </form>
+</div>

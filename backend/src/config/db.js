@@ -1,0 +1,18 @@
+const mysql = require('mysql2');
+
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',        // usuario de MySQL
+  password: 'admin',        // contraseña de MySQL
+  database: 'sanivac'  // el nombre de la BD
+});
+
+connection.connect(err => {
+  if (err) {
+    console.error('❌ Error conectando a la BD:', err);
+    return;
+  }
+  console.log('✅ Conectado a la base de datos MySQL');
+});
+
+module.exports = connection;

@@ -1,0 +1,12 @@
+.dash { padding: 20px; font-family: Arial, sans-serif; }
+header h2 { margin: 0; color: #0A2D62; }
+header .muted { color:#5B6268; margin-bottom:14px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap:12px; margin-top:12px; }
+.card {
+  background:#fff; border-radius:10px; padding:14px; box-shadow:0 6px 14px rgba(10,45,98,0.06);
+  text-decoration:none; color:inherit; display:block;
+}
+.card .title { font-size:13px; color:#0A2D62; font-weight:700; }
+.card .num { font-size:22px; color:#0B5FFF; margin-top:6px; font-weight:700; }
+.card.olive .num { color:#6B7B2E; }

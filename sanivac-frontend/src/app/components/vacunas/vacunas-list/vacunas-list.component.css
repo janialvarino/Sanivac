@@ -1,0 +1,8 @@
+/* reutiliza estilos list-wrap/table similares a usuarios */
+.list-wrap { padding:16px; background:#fff; border-radius:8px; box-shadow:0 6px 14px rgba(10,45,98,0.04); }
+.list-header { display:flex; justify-content:space-between; align-items:center; }
+.list-header h3 { margin:0; color:#0A2D62; }
+.btn.small { background:#9AA74B; color:#fff; padding:8px 10px; border-radius:8px; text-decoration:none; }
+.table { width:100%; border-collapse:collapse; margin-top:12px; }
+.table th { text-align:left; padding:8px; color:#0A2D62; background:#F7FAFC; }
+.table td { padding:10px; border-top:1px solid #EEF3FB; }

@@ -1,0 +1,34 @@
+<div class="form-card">
+  <h3>Registrar / Editar Usuario</h3>
+  <form (ngSubmit)="guardar()">
+    <label>Tipo ID</label>
+    <input [(ngModel)]="usuario.tipo_id" name="tipo_id" />
+    <label>Número ID</label>
+    <input [(ngModel)]="usuario.numero_id" name="numero_id" required />
+    <label>Primer nombre</label>
+    <input [(ngModel)]="usuario.primer_nombre" name="primer_nombre" required />
+    <label>Segundo nombre</label>
+    <input [(ngModel)]="usuario.segundo_nombre" name="segundo_nombre" />
+    <label>Primer apellido</label>
+    <input [(ngModel)]="usuario.primer_apellido" name="primer_apellido" required />
+    <label>Segundo apellido</label>
+    <input [(ngModel)]="usuario.segundo_apellido" name="segundo_apellido" />
+    <label>Fecha nacimiento</label>
+    <input [(ngModel)]="usuario.fecha_nacimiento" name="fecha_nacimiento" type="date" />
+    <label>Sexo</label>
+    <select [(ngModel)]="usuario.sexo" name="sexo">
+      <option value="F">Femenino</option>
+      <option value="M">Masculino</option>
+    </select>
+    <label>Dirección</label>
+    <input [(ngModel)]="usuario.direccion" name="direccion" />
+    <label>Teléfono</label>
+    <input [(ngModel)]="usuario.telefono" name="telefono" />
+    <label>EPS</label>
+    <input [(ngModel)]="usuario.eps" name="eps" />
+    <div class="actions">
+      <button class="btn-primary" type="submit">Guardar</button>
+      <a class="btn-outline" routerLink="/usuarios">Cancelar</a>
+    </div>
+  </form>
+</div>

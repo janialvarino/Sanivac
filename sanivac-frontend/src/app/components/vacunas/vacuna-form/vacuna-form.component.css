@@ -1,0 +1,7 @@
+.form-card { padding:16px; background:#fff; border-radius:8px; box-shadow:0 6px 14px rgba(10,45,98,0.04); }
+.form-card label { display:block; margin-top:10px; color:#0A2D62; font-weight:600; }
+.form-card input, .form-card textarea { width:100%; padding:8px; border:1px solid #E6EDF6; border-radius:6px; }
+.form-card textarea { min-height:80px; }
+.actions { margin-top:14px; display:flex; gap:8px; justify-content:flex-end; }
+.btn-primary { background:#0B5FFF; color:white; padding:8px 12px; border-radius:8px; border:none; }
+.btn-outline { color:#0A2D62; border:1px solid #E6EDF6; padding:8px 12px; border-radius:8px; text-decoration:none; }

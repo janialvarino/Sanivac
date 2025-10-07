@@ -1,0 +1,5 @@
+.alarmas { padding:16px; background:#fff; border-radius:8px; box-shadow:0 6px 14px rgba(10,45,98,0.04); }
+.badge { display:inline-block; padding:4px 8px; border-radius:8px; font-weight:700; margin-right:8px; color:#fff; }
+.badge.stock { background:#9AA74B; }    /* oliva */
+.badge.vencimiento { background:#0B5FFF; } /* azul */
+.alarmas li { margin:8px 0; color:#5B6268; }

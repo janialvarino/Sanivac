@@ -1,0 +1,9 @@
+<div class="alarmas">
+  <h3>Alarmas</h3>
+  <ul>
+    <li *ngFor="let a of alarmas">
+      <span class="badge" [ngClass]="a.tipo">{{a.tipo | uppercase}}</span>
+      {{ a.mensaje }} — <small>{{a.fecha}}</small>
+    </li>
+  </ul>
+</div>

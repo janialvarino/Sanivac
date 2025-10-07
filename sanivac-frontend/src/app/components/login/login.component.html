@@ -1,0 +1,18 @@
+<div class="login-card">
+  <h1>Sanivac</h1>
+  <p class="subtitle">Inicia sesión para acceder al sistema</p>
+
+  <form (ngSubmit)="login()" class="form">
+    <label>Usuario</label>
+    <input [(ngModel)]="username" name="username" type="text" placeholder="Username" />
+
+    <label>Contraseña</label>
+    <input [(ngModel)]="password" name="password" type="password" placeholder="Contraseña" />
+
+    <div class="actions">
+      <button type="submit" class="btn-primary" [disabled]="loading">{{ loading ? 'Ingresando...' : 'Ingresar' }}</button>
+    </div>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </form>
+</div>
