@@ -1,24 +1,153 @@
 <div class="form-card">
-  <h3>Registrar vacuna aplicada</h3>
-  <form (ngSubmit)="guardar()">
-    <label>ID usuario</label>
-    <input [(ngModel)]="vacuna.usuario_id" name="usuario_id" />
-    <label>Vacuna</label>
-    <input [(ngModel)]="vacuna.nombre_vacuna" name="nombre_vacuna" required />
-    <label>Dosis</label>
-    <input [(ngModel)]="vacuna.dosis" name="dosis" />
-    <label>Lote</label>
-    <input [(ngModel)]="vacuna.lote" name="lote" />
-    <label>Fecha aplicación</label>
-    <input [(ngModel)]="vacuna.fecha_aplicacion" name="fecha_aplicacion" type="date" />
-    <label>Responsable</label>
-    <input [(ngModel)]="vacuna.responsable" name="responsable" />
-    <label>Observaciones</label>
-    <textarea [(ngModel)]="vacuna.observaciones" name="observaciones"></textarea>
+  <h3>💉 Registro de Vacunación</h3>
 
+  <form (ngSubmit)="guardar()">
+    <!-- Búsqueda de Paciente -->
+    <div class="form-section">
+      <h4>📋 Datos del Paciente</h4>
+      
+      <label>Número de Identificación del Paciente *</label>
+      <input
+        type="text"
+        [(ngModel)]="vacuna.numero_id"
+        name="numero_id"
+        (blur)="buscarPaciente()"
+        placeholder="Ingrese número de identificación"
+        required
+      />
+
+      <div *ngIf="buscandoPaciente" class="mensaje-buscando">
+        ⏳ Buscando paciente...
+      </div>
+
+      <div *ngIf="pacienteBuscado && !buscandoPaciente">
+        <strong *ngIf="nombrePaciente !== 'No encontrado'">Paciente:</strong>
+        <span *ngIf="nombrePaciente !== 'No encontrado'" class="paciente-encontrado">✅ {{ nombrePaciente }}</span>
+        <span *ngIf="nombrePaciente === 'No encontrado'" class="no-encontrado">⚠️ Paciente no encontrado</span>
+      </div>
+
+      <label>Tipo de Carnet</label>
+      <input [(ngModel)]="vacuna.tipo_carnet" name="tipo_carnet" placeholder="Ej: Carnet Infantil" />
+    </div>
+
+    <!-- Datos de la Vacuna -->
+    <div class="form-section">
+      <h4>💊 Datos de la Vacuna</h4>
+      
+      <div class="form-row">
+        <div>
+          <label>Vacuna *</label>
+          <select [(ngModel)]="vacuna.nombre_vacuna" name="nombre_vacuna" required>
+            <option value="">Seleccione una vacuna</option>
+            <option *ngFor="let v of vacunasDisponibles" [value]="v">{{ v }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Laboratorio *</label>
+          <select [(ngModel)]="vacuna.laboratorio" name="laboratorio" required>
+            <option value="">Seleccione laboratorio</option>
+            <option *ngFor="let lab of laboratorios" [value]="lab">{{ lab }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Dosis *</label>
+          <input [(ngModel)]="vacuna.dosis" name="dosis" placeholder="Ej: 1, 2, Refuerzo" required />
+        </div>
+
+        <div>
+          <label>Lote de Vacuna *</label>
+          <input [(ngModel)]="vacuna.lote" name="lote" placeholder="Número de lote" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Lote Diluyente</label>
+          <input [(ngModel)]="vacuna.lote_diluyente" name="lote_diluyente" placeholder="Si aplica" />
+        </div>
+
+        <div>
+          <label>Lote Jeringa</label>
+          <input [(ngModel)]="vacuna.lote_jeringa" name="lote_jeringa" placeholder="Si aplica" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Tipo de Jeringa</label>
+          <select [(ngModel)]="vacuna.tipo_jeringa" name="tipo_jeringa">
+            <option value="">Seleccione tipo</option>
+            <option *ngFor="let tipo of tiposJeringa" [value]="tipo">{{ tipo }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Fecha de Aplicación *</label>
+          <input [(ngModel)]="vacuna.fecha_aplicacion" name="fecha_aplicacion" type="date" required />
+        </div>
+      </div>
+    </div>
+
+    <!-- Datos de Aplicación -->
+    <div class="form-section">
+      <h4>🩹 Datos de Aplicación</h4>
+      
+      <div class="form-row">
+        <div>
+          <label>Vía de Administración *</label>
+          <select [(ngModel)]="vacuna.via_administracion" name="via_administracion" required>
+            <option value="">Seleccione</option>
+            <option value="INTRAMUSCULAR">Intramuscular</option>
+            <option value="SUBCUTÁNEA">Subcutánea</option>
+            <option value="ORAL">Oral</option>
+            <option value="INTRADÉRMICA">Intradérmica</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Sitio de Aplicación *</label>
+          <select [(ngModel)]="vacuna.sitio_aplicacion" name="sitio_aplicacion" required>
+            <option value="">Seleccione</option>
+            <option value="BRAZO DERECHO">Brazo Derecho</option>
+            <option value="BRAZO IZQUIERDO">Brazo Izquierdo</option>
+            <option value="MUSLO DERECHO">Muslo Derecho</option>
+            <option value="MUSLO IZQUIERDO">Muslo Izquierdo</option>
+            <option value="GLÚTEO">Glúteo</option>
+            <option value="ORAL">Oral</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Responsable *</label>
+          <input [(ngModel)]="vacuna.responsable" name="responsable" placeholder="Nombre del aplicador" required />
+        </div>
+
+        <div>
+          <label>Fecha Próxima Dosis</label>
+          <input [(ngModel)]="vacuna.fecha_proxima_dosis" name="fecha_proxima_dosis" type="date" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Observaciones -->
+    <div class="form-section">
+      <label>Observaciones</label>
+      <textarea [(ngModel)]="vacuna.observaciones" name="observaciones" rows="3" placeholder="Observaciones adicionales (reacciones, contraindicaciones, etc.)"></textarea>
+    </div>
+
+    <!-- Botones -->
     <div class="actions">
-      <button class="btn-primary" type="submit">Guardar</button>
-      <a class="btn-outline" routerLink="/vacunas">Cancelar</a>
+      <button type="submit" class="btn-primary" [disabled]="guardando">
+        <span *ngIf="!guardando">💾 Guardar Registro</span>
+        <span *ngIf="guardando">⏳ Guardando...</span>
+      </button>
+      <button type="button" class="btn-outline" (click)="cancelar()">❌ Cancelar</button>
     </div>
   </form>
 </div>

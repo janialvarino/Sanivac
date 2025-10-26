@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 
 // Importamos los componentes standalone
 import { LoginComponent } from './components/login/login.component';
@@ -10,37 +11,65 @@ import { UsuarioFormComponent } from './components/usuarios/usuario-form/usuario
 
 // Vacunas
 import { VacunasListComponent } from './components/vacunas/vacunas-list/vacunas-list.component';
-import { VacunasFormComponent } from './components/vacunas/vacuna-form/vacuna-form.component';
+import { VacunaFormComponent } from './components/vacunas/vacuna-form/vacuna-form.component';
 
-// Reportes
+// 📦 Inventario
+import { InventarioListComponent } from './components/inventario/inventario-list/inventario-list.component';
+import { InventarioFormComponent } from './components/inventario/inventario-form/inventario-form.component';
+
+
+// ⏰ Alarmas
+import { AlarmasListComponent } from './components/alarmas/alarmas-list/alarmas-list.component';
+
+// 📊 Reportes
 import { ReportesComponent } from './components/reportes/reportes.component';
 
-// Inventario
-import { InventarioComponent } from './components/inventario/inventario.component';
+import { DatosClinicosComponent } from './components/usuarios/datos-clinicos/datos-clinicos.component';
 
-// Alarmas
-import { AlarmasComponent } from './components/alarmas/alarmas.component';
+
+
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' }, // ruta por defecto
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
 
-  // Usuarios
-  { path: 'usuarios', component: UsuarioListComponent },
-  { path: 'usuarios/form', component: UsuarioFormComponent },
+  // Dashboard (acceso para todos los roles)
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
 
-  // Vacunas
-  { path: 'vacunas', component: VacunasListComponent },
-  { path: 'vacunas/form', component: VacunasFormComponent },
+  // 👩‍💼 Usuarios (solo administradora)
+  { path: 'usuarios', component: UsuarioListComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
+  { path: 'usuarios/form', component: UsuarioFormComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
+  { path: 'usuarios/form/:id', component: UsuarioFormComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
 
-  // Reportes
-  { path: 'reportes', component: ReportesComponent },
+  // 💉 Vacunas (enfermera y administradora)
+  { path: 'vacunas', component: VacunasListComponent, canActivate: [AuthGuard], data: { roles: ['admin', 'enfermera'] } },
+  { path: 'vacunas/form', component: VacunaFormComponent, canActivate: [AuthGuard], data: { roles: ['admin', 'enfermera'] } },
 
-  // Inventario
-  { path: 'inventario', component: InventarioComponent },
+  // 📦 Inventario (solo admin)
+  { path: 'inventario', component: InventarioListComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
+  { path: 'inventario/form', component: InventarioFormComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
+  { path: 'inventario/form/:id', component: InventarioFormComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
 
-  // Alarmas
-  { path: 'alarmas', component: AlarmasComponent },
+  // ⏰ Alarmas (admin y enfermera)
+  { path: 'alarmas', component: AlarmasListComponent, canActivate: [AuthGuard], data: { roles: ['admin', 'enfermera'] } },
+
+  // 📊 Reportes (solo admin)
+  { path: 'reportes', component: ReportesComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
+
+
+{
+  path: 'vacunas/detalle/:id',
+  loadComponent: () =>
+    import('./components/vacunas/vacunas-detalle/vacunas-detalle.component')
+      .then(m => m.VacunasDetalleComponent),
+  canActivate: [AuthGuard],
+  data: { roles: ['admin', 'enfermera'] }
+},
+
+{ path: 'usuarios/datos-clinicos/:id', component: DatosClinicosComponent }, // ✅ Nueva ruta
+
+
+
+  // Ruta por defecto
+  { path: '**', redirectTo: 'login' }
 ];
-

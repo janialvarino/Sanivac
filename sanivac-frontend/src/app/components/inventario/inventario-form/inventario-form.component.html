@@ -1,0 +1,185 @@
+<div class="inventario-form-container">
+  <!-- Header -->
+  <div class="form-header">
+    <h2>{{ editId ? '✏️ Editar Lote de Inventario' : '📦 Registrar Nuevo Lote' }}</h2>
+  </div>
+
+  <form (ngSubmit)="guardar()" class="formulario">
+    <!-- Sección: Información de la Vacuna -->
+    <div class="form-section">
+      <h3 class="section-title">💉 Información de la Vacuna</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre_vacuna">Vacuna *</label>
+          <select
+            id="nombre_vacuna"
+            [(ngModel)]="modelo.nombre_vacuna"
+            name="nombre_vacuna"
+            required
+          >
+            <option value="">Seleccione una vacuna</option>
+            <option *ngFor="let v of vacunas" [value]="v">{{ v }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="laboratorio">Laboratorio *</label>
+          <select
+            id="laboratorio"
+            [(ngModel)]="modelo.laboratorio"
+            name="laboratorio"
+            required
+          >
+            <option value="">Seleccione laboratorio</option>
+            <option *ngFor="let lab of laboratorios" [value]="lab">{{ lab }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Lotes -->
+    <div class="form-section">
+      <h3 class="section-title">🏷️ Información de Lotes</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="lote">Lote de Vacuna *</label>
+          <input
+            type="text"
+            id="lote"
+            [(ngModel)]="modelo.lote"
+            name="lote"
+            placeholder="Número de lote"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="lote_diluyente">Lote Diluyente</label>
+          <input
+            type="text"
+            id="lote_diluyente"
+            [(ngModel)]="modelo.lote_diluyente"
+            name="lote_diluyente"
+            placeholder="Si aplica"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="lote_jeringa">Lote Jeringa</label>
+          <input
+            type="text"
+            id="lote_jeringa"
+            [(ngModel)]="modelo.lote_jeringa"
+            name="lote_jeringa"
+            placeholder="Si aplica"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="tipo_jeringa">Tipo de Jeringa</label>
+          <select
+            id="tipo_jeringa"
+            [(ngModel)]="modelo.tipo_jeringa"
+            name="tipo_jeringa"
+          >
+            <option value="">Seleccione tipo</option>
+            <option *ngFor="let j of jeringas" [value]="j">{{ j }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Cantidades -->
+    <div class="form-section">
+      <h3 class="section-title">📊 Cantidades</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cantidad_total">Cantidad Total Recibida *</label>
+          <input
+            type="number"
+            id="cantidad_total"
+            [(ngModel)]="modelo.cantidad_total"
+            name="cantidad_total"
+            (ngModelChange)="sincronizarCantidades()"
+            min="0"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="cantidad_disponible">Cantidad Disponible *</label>
+          <input
+            type="number"
+            id="cantidad_disponible"
+            [(ngModel)]="modelo.cantidad_disponible"
+            name="cantidad_disponible"
+            min="0"
+            required
+          />
+          <small class="hint">Se actualiza automáticamente al aplicar vacunas</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Fechas -->
+    <div class="form-section">
+      <h3 class="section-title">📅 Fechas</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fecha_llegada">Fecha de Llegada *</label>
+          <input
+            type="date"
+            id="fecha_llegada"
+            [(ngModel)]="modelo.fecha_llegada"
+            name="fecha_llegada"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="fecha_vencimiento">Fecha de Vencimiento *</label>
+          <input
+            type="date"
+            id="fecha_vencimiento"
+            [(ngModel)]="modelo.fecha_vencimiento"
+            name="fecha_vencimiento"
+            required
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Observaciones -->
+    <div class="form-section">
+      <h3 class="section-title">📝 Observaciones</h3>
+
+      <div class="form-group full-width">
+        <label for="observaciones">Observaciones Adicionales</label>
+        <textarea
+          id="observaciones"
+          [(ngModel)]="modelo.observaciones"
+          name="observaciones"
+          rows="4"
+          placeholder="Información adicional sobre el lote, condiciones de almacenamiento, etc."
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="acciones">
+      <button type="submit" class="btn-guardar" [disabled]="guardando">
+        <span *ngIf="!guardando">💾 {{ editId ? 'Actualizar' : 'Guardar' }} Lote</span>
+        <span *ngIf="guardando">⏳ Guardando...</span>
+      </button>
+      <button type="button" class="btn-cancelar" (click)="cancelar()">
+        ❌ Cancelar
+      </button>
+    </div>
+  </form>
+</div>

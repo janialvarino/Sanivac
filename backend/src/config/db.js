@@ -1,18 +1,26 @@
-const mysql = require('mysql2');
+// src/config/db.js
+const mysql = require('mysql2/promise');
+require('dotenv').config();
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',        // usuario de MySQL
-  password: 'admin',        // contraseña de MySQL
-  database: 'sanivac'  // el nombre de la BD
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'admin',
+  database: process.env.DB_NAME || 'sanivac',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-connection.connect(err => {
-  if (err) {
-    console.error('❌ Error conectando a la BD:', err);
-    return;
+// ✅ Probar conexión al iniciar
+(async () => {
+  try {
+    const connection = await pool.getConnection();
+    console.log('✅ Conectado a la base de datos MySQL');
+    connection.release();
+  } catch (err) {
+    console.error('❌ Error al conectar con la BD:', err.message);
   }
-  console.log('✅ Conectado a la base de datos MySQL');
-});
+})();
 
-module.exports = connection;
+module.exports = pool;

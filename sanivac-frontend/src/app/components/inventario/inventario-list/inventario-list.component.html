@@ -1,0 +1,57 @@
+<div class="inventario-container">
+  <!-- Header con botón -->
+  <div class="card-header">
+    <h2>📦 Gestión de Inventario de Vacunas</h2>
+    <button class="btn primary" (click)="nuevoLote()">
+      ➕ Nuevo Lote
+    </button>
+  </div>
+
+  <!-- Tabla de inventario -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Vacuna</th>
+        <th>Laboratorio</th>
+        <th>Lote</th>
+        <th>Disponible</th>
+        <th>Total</th>
+        <th>Fecha Llegada</th>
+        <th>Vencimiento</th>
+        <th>Tipo Jeringa</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of inventario">
+        <td class="vacuna-nombre">{{ item.nombre_vacuna }}</td>
+        <td>{{ item.laboratorio || 'N/A' }}</td>
+        <td class="lote">{{ item.lote }}</td>
+        <td [class.stock-bajo]="item.cantidad_disponible < 10" 
+            [class.stock-medio]="item.cantidad_disponible >= 10 && item.cantidad_disponible < 50"
+            [class.stock-alto]="item.cantidad_disponible >= 50">
+          <strong>{{ item.cantidad_disponible }}</strong>
+        </td>
+        <td>{{ item.cantidad_total }}</td>
+        <td>{{ item.fecha_llegada | date:'dd/MM/yyyy' }}</td>
+        <td [class.vencimiento-proximo]="esProximoAVencer(item.fecha_vencimiento)">
+          {{ item.fecha_vencimiento | date:'dd/MM/yyyy' }}
+        </td>
+        <td>{{ item.tipo_jeringa || 'N/A' }}</td>
+        <td class="acciones">
+          <button class="btn-editar" (click)="editar(item.id)" title="Editar">
+            ✏️
+          </button>
+          <button class="btn-eliminar" (click)="eliminar(item.id)" title="Eliminar">
+            🗑️
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Mensaje si no hay datos -->
+  <div *ngIf="inventario.length === 0" class="sin-datos">
+    📭 No hay registros en el inventario
+  </div>
+</div>

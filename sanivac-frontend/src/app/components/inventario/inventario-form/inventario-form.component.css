@@ -1,0 +1,181 @@
+/* === 🌿 CONTENEDOR PRINCIPAL === */
+.inventario-form-container {
+  max-width: 900px;
+  margin: 30px auto;
+  background: linear-gradient(180deg, #e8f5e9, #f1f8e9);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* === 🟩 HEADER === */
+.form-header {
+  background: #026112;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.form-header h2 {
+  text-align: center;
+  color: #ffffff;
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* === 📝 FORMULARIO === */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* === 📦 SECCIONES === */
+.form-section {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+  color: #026112;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #4e7c31;
+}
+
+/* === 📋 FILAS Y GRUPOS === */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* === 🏷️ LABELS === */
+label {
+  font-weight: 600;
+  color: #023008;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+/* === 📝 INPUTS === */
+input,
+select,
+textarea {
+  padding: 12px 15px;
+  border: 2px solid #a5d6a7;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #023008;
+  background: #ffffff;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #026112;
+  box-shadow: 0 0 0 3px rgba(2, 97, 18, 0.1);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+/* === 💡 HINTS === */
+.hint {
+  font-size: 0.85rem;
+  color: #757575;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* === 🔘 BOTONES === */
+.acciones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-guardar {
+  background: linear-gradient(135deg, #026112, #049440);
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(2, 97, 18, 0.3);
+}
+
+.btn-guardar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #049440, #227402);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(2, 97, 18, 0.4);
+}
+
+.btn-guardar:disabled {
+  background: #a5d6a7;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-cancelar {
+  background-color: #920202;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(146, 2, 2, 0.3);
+}
+
+.btn-cancelar:hover {
+  background-color: #c62828;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(146, 2, 2, 0.4);
+}
+
+/* === 📱 RESPONSIVE === */
+@media (max-width: 768px) {
+  .inventario-form-container {
+    padding: 20px;
+    margin: 15px;
+  }
+
+  .form-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .acciones {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+}

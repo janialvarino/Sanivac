@@ -1,0 +1,89 @@
+<div class="alarmas-container">
+  <!-- Header -->
+  <div class="card-header">
+    <h2>🔔 Alertas de Vacunación</h2>
+    <span class="total-alarmas">{{ alarmas.length }} alertas</span>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading">
+    ⏳ Cargando alertas...
+  </div>
+
+  <!-- Tabla de alarmas -->
+  <table *ngIf="!cargando && alarmas.length > 0" class="table">
+    <thead>
+      <tr>
+        <th>Identificación</th>
+        <th>Nombre Paciente</th>
+        <th>Vacuna</th>
+        <th>Dosis</th>
+        <th>Fecha Próxima Dosis</th>
+        <th>Estado</th>
+        <th>Mensaje</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let alarma of alarmas">
+        <td class="numero-id">{{ alarma.numero_id }}</td>
+        <td class="nombre-paciente">{{ alarma.nombre_completo || 'N/A' }}</td>
+        <td>{{ alarma.nombre_vacuna || 'N/A' }}</td>
+        <td>{{ alarma.dosis }}</td>
+        <td>
+          <span *ngIf="alarma.fecha_proxima_dosis">
+            {{ alarma.fecha_proxima_dosis | date:'dd/MM/yyyy' }}
+          </span>
+          <span *ngIf="!alarma.fecha_proxima_dosis" class="sin-fecha">
+            Sin fecha
+          </span>
+        </td>
+        <td>
+          <span class="estado-badge" [ngClass]="getEstadoClase(alarma)">
+            {{ getEstadoTexto(alarma) }}
+          </span>
+        </td>
+        <td class="mensaje">{{ alarma.mensaje }}</td>
+        <td class="acciones">
+          <button 
+            *ngIf="puedeMarcar(alarma)"
+            class="btn-marcar" 
+            (click)="marcarAtendida(alarma.id)">
+            ✓ Marcar Atendida
+          </button>
+          <span *ngIf="!puedeMarcar(alarma)" class="atendida-label">
+            ✓ Atendida
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Sin datos -->
+  <div *ngIf="!cargando && alarmas.length === 0" class="sin-datos">
+    📭 No hay alertas registradas
+  </div>
+
+  <!-- Leyenda -->
+  <div class="leyenda">
+    <h3>📊 Leyenda de Estados:</h3>
+    <div class="leyenda-items">
+      <div class="leyenda-item">
+        <span class="estado-badge vencida">🔴 Vencida</span>
+        <p>La fecha de la próxima dosis ya pasó</p>
+      </div>
+      <div class="leyenda-item">
+        <span class="estado-badge proxima">🟡 Próxima</span>
+        <p>La próxima dosis está en los próximos 7 días</p>
+      </div>
+      <div class="leyenda-item">
+        <span class="estado-badge pendiente">⏳ Pendiente</span>
+        <p>Aún falta tiempo para la próxima dosis</p>
+      </div>
+      <div class="leyenda-item">
+        <span class="estado-badge vacunado">✅ Vacunado</span>
+        <p>El paciente ya fue vacunado</p>
+      </div>
+    </div>
+  </div>
+</div>

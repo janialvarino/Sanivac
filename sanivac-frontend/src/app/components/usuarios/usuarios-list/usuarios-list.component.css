@@ -1,8 +1,154 @@
-.list-wrap { padding:16px; background:#fff; border-radius:8px; box-shadow:0 6px 16px rgba(0,0,0,0.04); }
-.list-header { display:flex; justify-content:space-between; align-items:center; }
-.list-header h3 { margin:0; color:#0A2D62; }
-.btn.small { background:#0B5FFF; color:#fff; padding:8px 10px; border-radius:8px; text-decoration:none; }
-.table { width:100%; border-collapse:collapse; margin-top:12px; }
-.table th { text-align:left; padding:8px; color:#0A2D62; background:#F7FAFC; }
-.table td { padding:10px; border-top:1px solid #EEF3FB; }
+/* === 🌿 CONTENEDOR GENERAL === */
+.usuarios-container {
+  background: linear-gradient(180deg, #e8f5e9, #f1f8e9);
+  padding: 30px;
+  min-height: 100vh;
+}
 
+/* === 🟩 ENCABEZADO PRINCIPAL === */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #026112, #049440);
+  padding: 14px 20px;
+  border-radius: 8px;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.card-header .btn.primary {
+  background-color: #227402;
+  color: #f6f8f6;
+  font-weight: 600;
+  border-radius: 8px;
+  padding:10px 20px;
+  transition: 0.3s;
+}
+
+.card-header .btn.primary:hover {
+  background-color: #e8f5e9;
+  transform: scale(1.05);
+}
+
+/* === 🔍 BARRA DE BÚSQUEDA === */
+.busqueda {
+  text-align: right;
+  margin: 10px 0 18px 0;
+}
+
+.busqueda input {
+  padding: 8px 12px;
+  border: 1px solid #a5d6a7;
+  border-radius: 8px;
+  width: 280px;
+  background-color: #ffffff;
+  color: #2b7a0b;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.busqueda input:focus {
+  border-color: #2b7a0b;
+  box-shadow: 0 0 6px rgba(43, 122, 11, 0.3);
+  outline: none;
+}
+
+/* === 📋 TABLA DE USUARIOS === */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+th {
+  background-color: #4e7c31;
+  color: #ffffff;
+  padding: 12px;
+  text-align: left;
+  font-weight: 700;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #023008;
+}
+
+tr:nth-child(even) {
+  background-color: #f1f8e9;
+}
+
+tr:hover {
+  background-color: #e3f2fd;
+  transition: background 0.3s ease;
+}
+
+/* === 🔘 BOTONES === */
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn.edit {
+  background-color: #026112;
+}
+
+.btn.edit:hover {
+  background-color: #049440;
+  transform: scale(1.05);
+}
+
+.btn.danger {
+  background-color: #920202;
+}
+
+.btn.danger:hover {
+  background-color: #c62828;
+  transform: scale(1.05);
+}
+
+/* === ❌ SIN CUADRO ALREDEDOR DE LA TABLA === */
+.card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* === 📱 RESPONSIVE === */
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+
+  .busqueda {
+    text-align: center;
+  }
+
+  .busqueda input {
+    width: 100%;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+}

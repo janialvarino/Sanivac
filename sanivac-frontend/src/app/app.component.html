@@ -1,23 +1,41 @@
-<div class="app-shell">
-  <!-- 🔹 Navbar solo aparece si NO estamos en login -->
-  <nav class="nav" *ngIf="!isLoginRoute()">
-    <a routerLink="/dashboard" class="logo">
-      <img src="assets/logo.png" alt="Logo Sanivac" height="30" />
-      Sanivac
-    </a>
-    <div class="links">
-      <a routerLink="/usuarios">Usuarios</a>
-      <a routerLink="/vacunas">Vacunas</a>
-      <a routerLink="/inventario">Inventario</a>
-      <a routerLink="/alarmas">Alarmas</a>
-      <a routerLink="/reportes">Reportes</a>
-      <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+<!-- src/app/app.component.html -->
+<div class="navbar-container" *ngIf="isLoggedIn">
+  <nav class="navbar">
+    <!-- 🔹 Logo y nombre -->
+    <div class="navbar-left">
+      <img src="assets/img/logo-sin-fondo.png" alt="Logo Sanivac" class="navbar-logo" />
+      <span class="brand-name">Sanivac</span>
+    </div>
+
+    <!-- 🔹 Enlaces de navegación -->
+    <div class="navbar-center">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+        <i data-lucide="home" class="icon"></i> Inicio
+      </a>
+      <a routerLink="/usuarios" routerLinkActive="active" class="nav-link">
+        <i data-lucide="users" class="icon"></i> Usuarios
+      </a>
+      <a routerLink="/vacunas" routerLinkActive="active" class="nav-link">
+        <i data-lucide="syringe" class="icon"></i> Vacunas
+      </a>
+      <a routerLink="/inventario" routerLinkActive="active" class="nav-link">
+        <i data-lucide="package" class="icon"></i> Inventario
+      </a>
+      <a routerLink="/alarmas" routerLinkActive="active" class="nav-link">
+        <i data-lucide="alarm-clock" class="icon"></i> Alarmas
+      </a>
+      <a routerLink="/reportes" routerLinkActive="active" class="nav-link">
+        <i data-lucide="bar-chart-2" class="icon"></i> Reportes
+      </a>
+    </div>
+
+    <!-- 🔹 Botón cerrar sesión -->
+    <div class="navbar-right">
+      <button class="logout-btn" (click)="cerrarSesion()">Cerrar sesión</button>
     </div>
   </nav>
-
-  <!-- 🔹 Aquí carga el login o el resto de vistas -->
-  <main class="main">
-    <router-outlet></router-outlet>
-  </main>
 </div>
 
+<main class="app-main">
+  <router-outlet></router-outlet>
+</main>

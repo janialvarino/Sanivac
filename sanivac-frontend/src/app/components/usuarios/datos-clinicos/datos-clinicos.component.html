@@ -1,0 +1,489 @@
+<div class="datos-clinicos-container">
+  <!-- Header -->
+  <div class="card-header">
+    <h2>🏥 Datos Clínicos del Paciente</h2>
+    <div class="header-info">
+      <span class="usuario-id">Usuario ID: {{usuarioId}}</span>
+      <span class="usuario-nombre" *ngIf="usuario">
+        {{usuario.primer_nombre}} {{usuario.primer_apellido}}
+      </span>
+      <span class="usuario-tipo" [class.menor]="esMenor">
+        {{esMenor ? ' Menor de Edad' : ' Adulto'}}
+      </span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading">
+    ⏳ Cargando datos clínicos...
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div *ngIf="!cargando" class="tabs-container">
+    <div class="tabs-nav">
+      <button *ngFor="let tab of tabsDisponibles"
+              [class.active]="tabActiva === tab.id"
+              (click)="cambiarTab(tab.id)"
+              class="tab-button">
+        <span class="tab-icon">{{tab.icono}}</span>
+        <span class="tab-label">{{tab.titulo}}</span>
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+
+      <!-- ============ TAB: DATOS DE LA MADRE (Solo Menores) ============ -->
+      <div *ngIf="esMenor && tabActiva === 'madre'" class="form-section">
+        <h3 class="section-title">👩 Datos de la Madre</h3>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tipo de Identificación <span class="required">*</span></label>
+            <select [(ngModel)]="datosMadre.tipo_identificacion" name="tipo_id_madre">
+              <option value="">Seleccione...</option>
+              <option value="CÉDULA DE CIUDADANÍA">Cédula de Ciudadanía</option>
+              <option value="CÉDULA DE EXTRANJERÍA">Cédula de Extranjería</option>
+              <option value="PASAPORTE">Pasaporte</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Número de Identificación <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="datosMadre.numero_identificacion" 
+                   name="num_id_madre" placeholder="Ej: 1234567890">
+          </div>
+
+          <div class="form-group">
+            <label>Primer Nombre <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="datosMadre.primer_nombre" name="pnombre_madre">
+          </div>
+
+          <div class="form-group">
+            <label>Segundo Nombre</label>
+            <input type="text" [(ngModel)]="datosMadre.segundo_nombre" name="snombre_madre">
+          </div>
+
+          <div class="form-group">
+            <label>Primer Apellido <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="datosMadre.primer_apellido" name="papellido_madre">
+          </div>
+
+          <div class="form-group">
+            <label>Segundo Apellido</label>
+            <input type="text" [(ngModel)]="datosMadre.segundo_apellido" name="sapellido_madre">
+          </div>
+
+          <div class="form-group">
+            <label>Correo Electrónico</label>
+            <input type="email" [(ngModel)]="datosMadre.correo" 
+                   name="correo_madre" placeholder="correo@ejemplo.com">
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" [(ngModel)]="datosMadre.telefono" name="tel_madre">
+          </div>
+
+          <div class="form-group">
+            <label>Celular <span class="required">*</span></label>
+            <input type="tel" [(ngModel)]="datosMadre.celular" name="cel_madre">
+          </div>
+
+          <div class="form-group">
+            <label>Régimen de Afiliación</label>
+            <select [(ngModel)]="datosMadre.regimen_afiliacion" name="regimen_madre">
+              <option value="">Seleccione...</option>
+              <option value="CONTRIBUTIVO">Contributivo</option>
+              <option value="SUBSIDIADO">Subsidiado</option>
+              <option value="ESPECIAL">Especial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Pertenencia Étnica</label>
+            <input type="text" [(ngModel)]="datosMadre.pertenencia_etnica" name="etnica_madre">
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosMadre.desplazado" name="desplazado_madre">
+              <span>¿Es desplazado?</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary" (click)="guardarSeccionActual()" [disabled]="guardando">
+            <span *ngIf="!guardando">💾 Guardar Datos de la Madre</span>
+            <span *ngIf="guardando">⏳ Guardando...</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ TAB: DATOS DEL CUIDADOR (Solo Menores) ============ -->
+      <div *ngIf="esMenor && tabActiva === 'cuidador'" class="form-section">
+        <h3 class="section-title">👨‍👩‍👧 Datos del Cuidador</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tipo de Identificación</label>
+            <select [(ngModel)]="datosCuidador.tipo_identificacion" name="tipo_id_cuidador">
+              <option value="">Seleccione...</option>
+              <option value="CÉDULA DE CIUDADANÍA">Cédula de Ciudadanía</option>
+              <option value="CÉDULA DE EXTRANJERÍA">Cédula de Extranjería</option>
+              <option value="PASAPORTE">Pasaporte</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Número de Identificación</label>
+            <input type="text" [(ngModel)]="datosCuidador.numero_identificacion" name="num_id_cuidador">
+          </div>
+
+          <div class="form-group">
+            <label>Primer Nombre</label>
+            <input type="text" [(ngModel)]="datosCuidador.primer_nombre" name="pnombre_cuidador">
+          </div>
+
+          <div class="form-group">
+            <label>Segundo Nombre</label>
+            <input type="text" [(ngModel)]="datosCuidador.segundo_nombre" name="snombre_cuidador">
+          </div>
+
+          <div class="form-group">
+            <label>Primer Apellido</label>
+            <input type="text" [(ngModel)]="datosCuidador.primer_apellido" name="papellido_cuidador">
+          </div>
+
+          <div class="form-group">
+            <label>Segundo Apellido</label>
+            <input type="text" [(ngModel)]="datosCuidador.segundo_apellido" name="sapellido_cuidador">
+          </div>
+
+          <div class="form-group">
+            <label>Parentesco</label>
+            <input type="text" [(ngModel)]="datosCuidador.parentesco" 
+                   name="parentesco" placeholder="Ej: Padre, Abuelo, Tío">
+          </div>
+
+          <div class="form-group">
+            <label>Correo</label>
+            <input type="email" [(ngModel)]="datosCuidador.correo" name="correo_cuidador">
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" [(ngModel)]="datosCuidador.telefono" name="tel_cuidador">
+          </div>
+
+          <div class="form-group">
+            <label>Celular</label>
+            <input type="tel" [(ngModel)]="datosCuidador.celular" name="cel_cuidador">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary" (click)="guardarSeccionActual()" [disabled]="guardando">
+            <span *ngIf="!guardando">💾 Guardar Datos del Cuidador</span>
+            <span *ngIf="guardando">⏳ Guardando...</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ TAB: ANTECEDENTES MÉDICOS (Todos) ============ -->
+      <div *ngIf="tabActiva === 'antecedentes'" class="form-section">
+        <h3 class="section-title">🩺 Antecedentes Médicos</h3>
+
+        <!-- Lista de antecedentes existentes -->
+        <div *ngIf="antecedentesMedicos.length > 0" class="antecedentes-lista">
+          <h4>Antecedentes Registrados</h4>
+          <div *ngFor="let ant of antecedentesMedicos; let i = index" class="antecedente-item">
+            <div class="antecedente-header">
+              <span><strong>{{ant.tipo}}</strong> - {{ant.descripcion}}</span>
+              <button class="btn-icon danger" (click)="eliminarAntecedente(i)">🗑️</button>
+            </div>
+            <p *ngIf="ant.observaciones" class="antecedente-obs">{{ant.observaciones}}</p>
+          </div>
+        </div>
+
+        <!-- Formulario para nuevo antecedente -->
+        <div class="nuevo-antecedente">
+          <h4>➕ Agregar Nuevo Antecedente</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tipo <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="nuevoAntecedente.tipo" 
+                     name="tipo_nuevo" placeholder="Ej: Alergia, Enfermedad">
+            </div>
+
+            <div class="form-group">
+              <label>Descripción</label>
+              <input type="text" [(ngModel)]="nuevoAntecedente.descripcion" name="desc_nuevo">
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label>
+                <input type="checkbox" [(ngModel)]="nuevoAntecedente.evento_contraindicacion" name="evento_nuevo">
+                <span>Evento de Contraindicación</span>
+              </label>
+            </div>
+
+            <div *ngIf="nuevoAntecedente.evento_contraindicacion" class="form-group full-width">
+              <label>Descripción del Evento</label>
+              <textarea [(ngModel)]="nuevoAntecedente.descripcion_evento" 
+                        name="desc_evento_nuevo" rows="2"></textarea>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label>
+                <input type="checkbox" [(ngModel)]="nuevoAntecedente.reaccion_biologicos" name="reaccion_nuevo">
+                <span>Reacción a Biológicos</span>
+              </label>
+            </div>
+
+            <div *ngIf="nuevoAntecedente.reaccion_biologicos" class="form-group full-width">
+              <label>Descripción de la Reacción</label>
+              <textarea [(ngModel)]="nuevoAntecedente.descripcion_reaccion" 
+                        name="desc_reaccion_nuevo" rows="2"></textarea>
+            </div>
+
+            <div class="form-group full-width">
+              <label>Observaciones</label>
+              <textarea [(ngModel)]="nuevoAntecedente.observaciones" 
+                        name="obs_nuevo" rows="2"></textarea>
+            </div>
+          </div>
+
+          <button class="btn secondary" (click)="agregarAntecedente()">
+            ➕ Agregar Antecedente
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ TAB: DATOS COMPLEMENTARIOS (Todos) ============ -->
+      <div *ngIf="tabActiva === 'complementarios'" class="form-section">
+        <h3 class="section-title">📋 Datos Complementarios</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Sexo</label>
+            <select [(ngModel)]="datosComplementarios.sexo" name="sexo">
+              <option value="">Seleccione...</option>
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMENINO">Femenino</option>
+              <option value="INTERSEXUAL">Intersexual</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Género</label>
+            <input type="text" [(ngModel)]="datosComplementarios.genero" name="genero">
+          </div>
+
+          <div class="form-group">
+            <label>Orientación Sexual</label>
+            <input type="text" [(ngModel)]="datosComplementarios.orientacion_sexual" name="orientacion">
+          </div>
+
+          <div class="form-group">
+            <label>Edad Gestacional</label>
+            <input type="text" [(ngModel)]="datosComplementarios.edad_gestacional" 
+                   name="edad_gest" placeholder="Ej: 38 semanas">
+          </div>
+
+          <div class="form-group">
+            <label>País de Nacimiento</label>
+            <input type="text" [(ngModel)]="datosComplementarios.pais_nacimiento" name="pais_nac">
+          </div>
+
+          <div class="form-group">
+            <label>Estatus Migratorio</label>
+            <input type="text" [(ngModel)]="datosComplementarios.estatus_migratorio" name="estatus_mig">
+          </div>
+
+          <div class="form-group">
+            <label>Lugar de Parto</label>
+            <input type="text" [(ngModel)]="datosComplementarios.lugar_parto" name="lugar_parto">
+          </div>
+
+          <div class="form-group">
+            <label>Régimen de Afiliación</label>
+            <select [(ngModel)]="datosComplementarios.regimen_afiliacion" name="regimen_comp">
+              <option value="">Seleccione...</option>
+              <option value="CONTRIBUTIVO">Contributivo</option>
+              <option value="SUBSIDIADO">Subsidiado</option>
+              <option value="ESPECIAL">Especial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Aseguradora (EPS)</label>
+            <input type="text" [(ngModel)]="datosComplementarios.aseguradora" name="aseguradora">
+          </div>
+
+          <div class="form-group">
+            <label>Pertenencia Étnica</label>
+            <input type="text" [(ngModel)]="datosComplementarios.pertenencia_etnica" name="etnica_comp">
+          </div>
+
+          <div class="form-group">
+            <label>País de Residencia</label>
+            <input type="text" [(ngModel)]="datosComplementarios.pais_residencia" name="pais_res">
+          </div>
+
+          <div class="form-group">
+            <label>Departamento</label>
+            <input type="text" [(ngModel)]="datosComplementarios.departamento_residencia" name="depto">
+          </div>
+
+          <div class="form-group">
+            <label>Municipio</label>
+            <input type="text" [(ngModel)]="datosComplementarios.municipio_residencia" name="municipio">
+          </div>
+
+          <div class="form-group">
+            <label>Comuna/Localidad</label>
+            <input type="text" [(ngModel)]="datosComplementarios.comuna_localidad" name="comuna">
+          </div>
+
+          <div class="form-group">
+            <label>Área</label>
+            <select [(ngModel)]="datosComplementarios.area" name="area">
+              <option value="">Seleccione...</option>
+              <option value="URBANA">Urbana</option>
+              <option value="RURAL">Rural</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Dirección</label>
+            <input type="text" [(ngModel)]="datosComplementarios.direccion" name="direccion">
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" [(ngModel)]="datosComplementarios.telefono" name="tel_comp">
+          </div>
+
+          <div class="form-group">
+            <label>Celular</label>
+            <input type="tel" [(ngModel)]="datosComplementarios.celular" name="cel_comp">
+          </div>
+
+          <div class="form-group full-width">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="datosComplementarios.email" name="email_comp">
+          </div>
+
+          <!-- Checkboxes -->
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.desplazado" name="desplazado_comp">
+              <span>¿Es desplazado?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.discapacitado" name="discapacitado">
+              <span>¿Tiene discapacidad?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.victima_conflicto" name="victima">
+              <span>¿Víctima del conflicto?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.estudia_actualmente" name="estudia">
+              <span>¿Estudia actualmente?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.autoriza_llamadas" name="autoriza_tel">
+              <span>¿Autoriza llamadas?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.autoriza_correo" name="autoriza_email">
+              <span>¿Autoriza correos?</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary" (click)="guardarSeccionActual()" [disabled]="guardando">
+            <span *ngIf="!guardando">💾 Guardar Datos Complementarios</span>
+            <span *ngIf="guardando">⏳ Guardando...</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ TAB: CONDICIÓN USUARIA (Solo Adultos) ============ -->
+      <div *ngIf="!esMenor && tabActiva === 'condicion'" class="form-section">
+        <h3 class="section-title">🤰 Condición Usuaria</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Condición</label>
+            <input type="text" [(ngModel)]="condicionUsuaria.condicion" 
+                   name="condicion" placeholder="Ej: Embarazada, Lactante">
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="condicionUsuaria.gestante" name="gestante">
+              <span>¿Es gestante?</span>
+            </label>
+          </div>
+
+          <div *ngIf="condicionUsuaria.gestante" class="form-group">
+            <label>Fecha Última Menstruación</label>
+            <input type="date" [(ngModel)]="condicionUsuaria.fecha_ultima_menstruacion" name="fecha_um">
+          </div>
+
+          <div *ngIf="condicionUsuaria.gestante" class="form-group">
+            <label>Semanas de Gestación</label>
+            <input type="number" [(ngModel)]="condicionUsuaria.semanas_gestacion" 
+                   name="semanas" min="0" max="42">
+          </div>
+
+          <div *ngIf="condicionUsuaria.gestante" class="form-group">
+            <label>Fecha Probable de Parto</label>
+            <input type="date" [(ngModel)]="condicionUsuaria.fecha_probable_parto" name="fecha_parto">
+          </div>
+
+          <div class="form-group">
+            <label>Embarazos Previos</label>
+            <input type="number" [(ngModel)]="condicionUsuaria.embarazos_previos" 
+                   name="embarazos_prev" min="0">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary" (click)="guardarSeccionActual()" [disabled]="guardando">
+            <span *ngIf="!guardando">💾 Guardar Condición Usuaria</span>
+            <span *ngIf="guardando">⏳ Guardando...</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Botón Volver -->
+  <div class="navigation-buttons">
+    <button class="btn outline" (click)="volver()">
+      🔙 Volver a Usuarios
+    </button>
+  </div>
+</div>

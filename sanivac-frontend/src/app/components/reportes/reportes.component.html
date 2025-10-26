@@ -1,8 +1,187 @@
-<div class="reportes">
-  <h3>Reportes</h3>
-  <ul>
-    <li *ngFor="let r of reportes">
-      <strong>{{r.nombre}}</strong> — {{r.fecha}}
-    </li>
-  </ul>
+<div class="reportes-container">
+  
+  <!-- Header -->
+  <div class="reportes-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>📊 Centro de Reportes Sanivac</h1>
+        <p class="subtitle">Consulta y descarga reportes del sistema de vacunación</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="reportes-content">
+
+    <!-- Filtros -->
+    <section class="filtros-section">
+      <div class="filtros-card">
+        <h3>🔍 Filtrar Reporte</h3>
+        <div class="filtros-grid">
+          <div class="filtro-item">
+            <label>Mes:</label>
+            <select [(ngModel)]="mesSeleccionado" (change)="cargarDatos()">
+              <option *ngFor="let m of meses" [value]="m.num">{{ m.nombre }}</option>
+            </select>
+          </div>
+
+          <div class="filtro-item">
+            <label>Año:</label>
+            <select [(ngModel)]="anioSeleccionado" (change)="cargarDatos()">
+              <option *ngFor="let a of anios" [value]="a">{{ a }}</option>
+            </select>
+          </div>
+
+          <div class="filtro-actions">
+            <button class="btn-primary" (click)="cargarDatos()">
+              <span class="btn-icon">🔄</span>
+              Actualizar
+            </button>
+            <button class="btn-success" (click)="descargarExcel()">
+              <span class="btn-icon">📥</span>
+              Descargar Excel
+            </button>
+            <button class="btn-secondary" (click)="imprimir()">
+              <span class="btn-icon">🖨️</span>
+              Imprimir
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Estadísticas -->
+    <section class="stats-grid">
+      <div class="stat-card usuarios">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <h3>{{ stats.totalUsuarios }}</h3>
+          <p>Usuarios Registrados</p>
+        </div>
+      </div>
+
+      <div class="stat-card vacunas">
+        <div class="stat-icon">💉</div>
+        <div class="stat-info">
+          <h3>{{ stats.totalVacunas }}</h3>
+          <p>Vacunas del Período</p>
+        </div>
+      </div>
+
+      <div class="stat-card inventario">
+        <div class="stat-icon">📦</div>
+        <div class="stat-info">
+          <h3>{{ stats.totalInventario }}</h3>
+          <p>Stock Disponible</p>
+        </div>
+      </div>
+
+      <div class="stat-card alarmas">
+        <div class="stat-icon">🔔</div>
+        <div class="stat-info">
+          <h3>{{ stats.totalAlarmas }}</h3>
+          <p>Alarmas Activas</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading -->
+    <div *ngIf="cargando" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Cargando datos del sistema...</p>
+    </div>
+
+    <!-- Tablas de Datos -->
+    <div *ngIf="!cargando" class="tablas-container">
+
+      <!-- Tabla de Usuarios -->
+      <section class="tabla-section">
+        <div class="tabla-header">
+          <h3>👥 Usuarios Registrados en el Sistema</h3>
+          <span class="badge">{{ usuarios.length }} registros</span>
+        </div>
+        <div class="tabla-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo Documento</th>
+                <th>Número ID</th>
+                <th>Nombres Completos</th>
+                <th>Apellidos Completos</th>
+                <th>Fecha Nacimiento</th>
+                <th>Sexo</th>
+                <th>EPS</th>
+                <th>Teléfono</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of usuarios">
+                <td>{{ u.id }}</td>
+                <td>{{ u.tipo_id }}</td>
+                <td>{{ u.numero_id }}</td>
+                <td>{{ u.primer_nombre }} {{ u.segundo_nombre || '' }}</td>
+                <td>{{ u.primer_apellido }} {{ u.segundo_apellido || '' }}</td>
+                <td>{{ u.fecha_nacimiento | date:'dd/MM/yyyy' }}</td>
+                <td>{{ u.sexo }}</td>
+                <td>{{ u.eps }}</td>
+                <td>{{ u.telefono || 'N/A' }}</td>
+              </tr>
+              <tr *ngIf="usuarios.length === 0">
+                <td colspan="9" class="no-data">No hay usuarios registrados en el sistema</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tabla de Vacunas -->
+      <section class="tabla-section">
+        <div class="tabla-header">
+          <h3>💉 Vacunas Aplicadas - {{ meses[mesSeleccionado - 1].nombre }} {{ anioSeleccionado }}</h3>
+          <span class="badge">{{ vacunasFiltradas.length }} registros</span>
+        </div>
+        <div class="tabla-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Paciente</th>
+                <th>Identificación</th>
+                <th>Vacuna</th>
+                <th>Dosis</th>
+                <th>Lote</th>
+                <th>Vía</th>
+                <th>Sitio</th>
+                <th>Fecha Aplicación</th>
+                <th>Próxima Dosis</th>
+                <th>Responsable</th>
+                <th>Observaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let v of vacunasFiltradas">
+                <td>{{ v.id }}</td>
+                <td>{{ v.nombre_paciente }}</td>
+                <td>{{ v.numero_identificacion }}</td>
+                <td>{{ v.nombre_vacuna }}</td>
+                <td>{{ v.dosis }}</td>
+                <td>{{ v.lote }}</td>
+                <td>{{ v.via || 'N/A' }}</td>
+                <td>{{ v.sitio || 'N/A' }}</td>
+                <td>{{ v.fecha_aplicacion | date:'dd/MM/yyyy' }}</td>
+                <td>{{ v.fecha_proxima_dosis | date:'dd/MM/yyyy' }}</td>
+                <td>{{ v.responsable }}</td>
+                <td>{{ v.observaciones || 'N/A' }}</td>
+              </tr>
+              <tr *ngIf="vacunasFiltradas.length === 0">
+                <td colspan="12" class="no-data">No hay vacunas aplicadas en este período</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
 </div>

@@ -1,34 +1,102 @@
-<div class="form-card">
-  <h3>Registrar / Editar Usuario</h3>
-  <form (ngSubmit)="guardar()">
-    <label>Tipo ID</label>
-    <input [(ngModel)]="usuario.tipo_id" name="tipo_id" />
-    <label>Número ID</label>
-    <input [(ngModel)]="usuario.numero_id" name="numero_id" required />
-    <label>Primer nombre</label>
-    <input [(ngModel)]="usuario.primer_nombre" name="primer_nombre" required />
-    <label>Segundo nombre</label>
-    <input [(ngModel)]="usuario.segundo_nombre" name="segundo_nombre" />
-    <label>Primer apellido</label>
-    <input [(ngModel)]="usuario.primer_apellido" name="primer_apellido" required />
-    <label>Segundo apellido</label>
-    <input [(ngModel)]="usuario.segundo_apellido" name="segundo_apellido" />
-    <label>Fecha nacimiento</label>
-    <input [(ngModel)]="usuario.fecha_nacimiento" name="fecha_nacimiento" type="date" />
-    <label>Sexo</label>
-    <select [(ngModel)]="usuario.sexo" name="sexo">
-      <option value="F">Femenino</option>
-      <option value="M">Masculino</option>
-    </select>
-    <label>Dirección</label>
-    <input [(ngModel)]="usuario.direccion" name="direccion" />
-    <label>Teléfono</label>
-    <input [(ngModel)]="usuario.telefono" name="telefono" />
-    <label>EPS</label>
-    <input [(ngModel)]="usuario.eps" name="eps" />
+<div class="usuario-form-container">
+  <h2>🧍‍♀️ Registrar / Editar Usuario</h2>
+
+  <form (ngSubmit)="guardar()" class="form-card">
+    <div class="form-grid">
+      <div>
+        <label>Tipo de Identificación</label>
+        <select [(ngModel)]="usuario.tipo_id" name="tipo_id" required (change)="verificarTipo()">
+          <option value="" disabled selected>Seleccione...</option>
+          <option value="CÉDULA DE CIUDADANÍA">CÉDULA DE CIUDADANÍA</option>
+          <option value="TARJETA DE IDENTIDAD">TARJETA DE IDENTIDAD</option>
+          <option value="CÉDULA DE EXTRANJERÍA">CÉDULA DE EXTRANJERÍA</option>
+          <option value="PASAPORTE">PASAPORTE</option>
+          <option value="REGISTRO CIVIL">REGISTRO CIVIL</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Número de Identificación</label>
+        <input [(ngModel)]="usuario.numero_id" name="numero_id" required />
+      </div>
+
+      <div>
+        <label>Primer Nombre</label>
+        <input [(ngModel)]="usuario.primer_nombre" name="primer_nombre" required />
+      </div>
+
+      <div>
+        <label>Segundo Nombre</label>
+        <input [(ngModel)]="usuario.segundo_nombre" name="segundo_nombre" />
+      </div>
+
+      <div>
+        <label>Primer Apellido</label>
+        <input [(ngModel)]="usuario.primer_apellido" name="primer_apellido" required />
+      </div>
+
+      <div>
+        <label>Segundo Apellido</label>
+        <input [(ngModel)]="usuario.segundo_apellido" name="segundo_apellido" />
+      </div>
+
+      <div>
+        <label>Fecha de Nacimiento</label>
+        <input [(ngModel)]="usuario.fecha_nacimiento" name="fecha_nacimiento" type="date" />
+      </div>
+
+      <div>
+        <label>Sexo</label>
+        <select [(ngModel)]="usuario.sexo" name="sexo">
+          <option value="">Seleccione...</option>
+          <option value="F">Femenino</option>
+          <option value="M">Masculino</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Dirección</label>
+        <input [(ngModel)]="usuario.direccion" name="direccion" />
+      </div>
+
+      <div>
+        <label>Teléfono</label>
+        <input [(ngModel)]="usuario.telefono" name="telefono" />
+      </div>
+
+      <div>
+        <label>EPS</label>
+        <input [(ngModel)]="usuario.eps" name="eps" />
+      </div>
+    </div>
+
+    <!-- ✅ Botones de acción -->
     <div class="actions">
-      <button class="btn-primary" type="submit">Guardar</button>
-      <a class="btn-outline" routerLink="/usuarios">Cancelar</a>
+      <button type="submit" class="btn-primary">💾 Guardar Usuario</button>
+      <button type="button" class="btn-outline" (click)="cancelar()">❌ Cancelar</button>
+      
+      <!-- 👶 Botón para MENORES (después de guardar) -->
+      <button 
+        *ngIf="esNino && usuario.id" 
+        type="button" 
+        class="btn-secondary" 
+        (click)="abrirDatosClinicos()">
+         Completar Datos Clínicos del Menor
+      </button>
+
+      <!-- 🧑 Botón para ADULTOS (después de guardar) -->
+      <button 
+        *ngIf="!esNino && usuario.id" 
+        type="button" 
+        class="btn-secondary" 
+        (click)="abrirDatosClinicos()">
+        📋 Completar Datos Clínicos
+      </button>
+    </div>
+
+    <!-- ⚠️ Mensaje informativo si aún no se ha guardado -->
+    <div *ngIf="!usuario.id" class="info-message">
+      ℹ️ Guarda primero el usuario para poder completar sus datos clínicos
     </div>
   </form>
 </div>

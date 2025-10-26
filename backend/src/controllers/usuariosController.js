@@ -1,58 +1,77 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+// src/controllers/usuariosController.js
 const UsuariosModel = require('../models/usuariosModel');
 
 const UsuariosController = {
-  // Listar usuarios
-  listar: (req, res) => {
-    UsuariosModel.getAll((err, results) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error al obtener usuarios' });
-      }
-      res.json(results);
-    });
+  // 📋 Obtener todos
+  getAll: async (req, res) => {
+    try {
+      const usuarios = await UsuariosModel.getAll();
+      res.json(usuarios);
+    } catch (err) {
+      console.error('❌ Error al obtener usuarios:', err);
+      res.status(500).json({ error: 'Error al obtener usuarios' });
+    }
   },
 
-  // Registrar usuario
-  registrar: (req, res) => {
-    const nuevoUsuario = req.body;
-
-    // Encriptar contraseña
-    const salt = bcrypt.genSaltSync(10);
-    nuevoUsuario.password = bcrypt.hashSync(nuevoUsuario.password, salt);
-
-    UsuariosModel.create(nuevoUsuario, (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error al registrar usuario' });
+  // 🔍 Obtener por ID
+  getById: async (req, res) => {
+    try {
+      const usuario = await UsuariosModel.getById(req.params.id);
+      if (!usuario) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
       }
-      res.json({ message: 'Usuario registrado con éxito', id: result.insertId });
-    });
+      res.json(usuario);
+    } catch (err) {
+      console.error('❌ Error al obtener usuario:', err);
+      res.status(500).json({ error: 'Error al obtener usuario' });
+    }
   },
 
-  // Login
-  login: (req, res) => {
-    const { numero_id, password } = req.body;
-
-    UsuariosModel.getByNumeroId(numero_id, (err, usuario) => {
-      if (err || !usuario) {
-        return res.status(401).json({ error: 'Usuario no encontrado' });
+  // 🔍 Buscar por número de identificación
+  buscarPorIdentificacion: async (req, res) => {
+    try {
+      const usuario = await UsuariosModel.getByNumeroId(req.params.numeroId);
+      if (!usuario) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
       }
+      res.json(usuario);
+    } catch (err) {
+      console.error('❌ Error al buscar usuario:', err);
+      res.status(500).json({ error: 'Error al buscar usuario' });
+    }
+  },
 
-      // Verificar contraseña
-      const esValida = bcrypt.compareSync(password, usuario.password);
-      if (!esValida) {
-        return res.status(401).json({ error: 'Credenciales inválidas' });
-      }
+  // ➕ Crear
+  create: async (req, res) => {
+    try {
+      const result = await UsuariosModel.create(req.body);
+      res.json({ mensaje: '✅ Usuario creado', id: result.insertId });
+    } catch (err) {
+      console.error('❌ Error al crear usuario:', err);
+      res.status(500).json({ error: 'Error al crear usuario' });
+    }
+  },
 
-      // Crear token JWT
-      const token = jwt.sign(
-        { id: usuario.id, numero_id: usuario.numero_id },
-        process.env.JWT_SECRET || 'secreto',
-        { expiresIn: '1h' }
-      );
+  // ✏️ Actualizar
+  update: async (req, res) => {
+    try {
+      await UsuariosModel.update(req.params.id, req.body);
+      res.json({ mensaje: '✅ Usuario actualizado' });
+    } catch (err) {
+      console.error('❌ Error al actualizar usuario:', err);
+      res.status(500).json({ error: 'Error al actualizar usuario' });
+    }
+  },
 
-      res.json({ message: 'Login exitoso', token });
-    });
+  // 🗑️ Eliminar
+  delete: async (req, res) => {
+    try {
+      await UsuariosModel.delete(req.params.id);
+      res.json({ mensaje: '🗑️ Usuario eliminado' });
+    } catch (err) {
+      console.error('❌ Error al eliminar usuario:', err);
+      res.status(500).json({ error: 'Error al eliminar usuario' });
+    }
   }
 };
 

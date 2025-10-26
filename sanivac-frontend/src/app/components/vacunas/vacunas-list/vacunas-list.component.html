@@ -1,22 +1,50 @@
-<div class="list-wrap">
-  <div class="list-header">
-    <h3>Vacunas aplicadas</h3>
-    <a routerLink="/vacunas/form" class="btn small">➕ Registrar</a>
+<div class="vacunas-container">
+  <!-- Header con botón a la derecha -->
+  <div class="card-header">
+    <h2>Registro de Vacunas Aplicadas</h2>
+    <button class="btn primary" (click)="irAFormulario()">
+      ➕ Registrar Nueva Vacuna
+    </button>
   </div>
 
-  <table class="table">
+  <div *ngIf="cargando" class="loading">
+    ⏳ Cargando vacunas...
+  </div>
+
+  <table *ngIf="!cargando && vacunas.length > 0" class="table">
     <thead>
-      <tr><th>ID</th><th>Paciente</th><th>Vacuna</th><th>Dosis</th><th>Lote</th><th>Fecha</th></tr>
+      <tr>
+        <th>Identificación</th>
+        <th>Paciente</th>
+        <th>Vacuna</th>
+        <th>Dosis</th>
+        <th>Lote</th>
+        <th>Fecha</th>
+        <th>Responsable</th>
+        <th>Observaciones</th>
+        <th>Esquema</th>
+      </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let v of vacunas">
-        <td>{{v.id}}</td>
-        <td>{{v.usuario}}</td>
-        <td>{{v.nombre_vacuna}}</td>
-        <td>{{v.dosis}}</td>
-        <td>{{v.lote}}</td>
-        <td>{{v.fecha}}</td>
+      <tr *ngFor="let vacuna of vacunas">
+        <td>{{ vacuna.numero_id || vacuna.identificacion }}</td>
+        <td>{{ vacuna.nombre_completo || vacuna.paciente }}</td>
+        <td>{{ vacuna.nombre_vacuna || vacuna.vacuna }}</td>
+        <td>{{ vacuna.dosis }}</td>
+        <td>{{ vacuna.lote }}</td>
+        <td>{{ vacuna.fecha_aplicacion | date:'dd/MM/yyyy' }}</td>
+        <td>{{ vacuna.responsable }}</td>
+        <td>{{ vacuna.observaciones || 'no' }}</td>
+        <td>
+          <button class="btn-esquema" (click)="verEsquema(vacuna)">
+            📋 Ver Esquema
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
+
+  <div *ngIf="!cargando && vacunas.length === 0" class="sin-datos">
+    📭 No hay vacunas registradas
+  </div>
 </div>

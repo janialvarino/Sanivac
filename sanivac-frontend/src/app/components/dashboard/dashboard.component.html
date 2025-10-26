@@ -1,29 +1,130 @@
-<div class="dash">
-  <header>
-    <h2>Panel Sanivac</h2>
-    <p class="muted">Resumen rápido del establecimiento</p>
+<div class="dashboard-wrapper">
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-content">
+      <div class="header-left">
+        <img src="assets/img/logo-sin-fondo.png" alt="Logo" class="logo" />
+        <h1>Panel de Control Sanivac</h1>
+      </div>
+      <div class="header-right">
+        <p class="subtitle">{{ fechaActual }} • {{ horaActual }}</p>
+      </div>
+    </div>
   </header>
 
-  <section class="cards">
-    <a class="card" routerLink="/usuarios">
-      <div class="title">Usuarios</div>
-      <div class="num">128</div>
-    </a>
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Cargando datos del sistema...</p>
+  </div>
 
-    <a class="card olive" routerLink="/vacunas">
-      <div class="title">Vacunas aplicadas</div>
-      <div class="num">542</div>
-    </a>
+  <!-- Contenido Principal -->
+  <main class="dashboard-content" *ngIf="!cargando">
 
-    <a class="card" routerLink="/inventario">
-      <div class="title">Stock</div>
-      <div class="num">320</div>
-    </a>
+    <!-- Tarjetas Superiores -->
+    <section class="cards-grid">
+      <div class="metric-card vacunas" (click)="irA('vacunas')">
+        <div class="card-icon">💉</div>
+        <div class="card-info">
+          <p class="card-label">Vacunas aplicadas hoy</p>
+          <h2 class="card-value">{{ stats.vacunasAplicadas }}</h2>
+        </div>
+      </div>
 
-    <a class="card" routerLink="/alarmas">
-      <div class="title">Alarmas</div>
-      <div class="num">3</div>
-    </a>
-  </section>
+      <div class="metric-card stock" (click)="irA('inventario')">
+        <div class="card-icon">📦</div>
+        <div class="card-info">
+          <p class="card-label">Stock disponible</p>
+          <h2 class="card-value">{{ stats.vacunasDisponibles }}</h2>
+        </div>
+      </div>
+
+      <div class="metric-card alarmas" (click)="irA('alarmas')">
+        <div class="card-icon">🔔</div>
+        <div class="card-info">
+          <p class="card-label">Alarmas activas</p>
+          <h2 class="card-value">{{ stats.alarmasActivas }}</h2>
+        </div>
+      </div>
+
+      <div class="metric-card pacientes" (click)="irA('usuarios')">
+        <div class="card-icon">👥</div>
+        <div class="card-info">
+          <p class="card-label">Pacientes atendidos</p>
+          <h2 class="card-value">{{ stats.totalUsuarios }}</h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Gráficas -->
+    <section class="charts-section">
+      <div class="chart-box">
+        <h3 class="chart-title">📊 Tipos de vacunas aplicadas este mes</h3>
+        <div class="chart-container">
+          <canvas id="chartVacunas"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <h3 class="chart-title">👥 Distribución por grupo de pacientes</h3>
+        <div class="chart-container">
+          <canvas id="chartPacientes"></canvas>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="dot blue"></span> Niños</span>
+          <span class="legend-item"><span class="dot red"></span> Adultos</span>
+          <span class="legend-item"><span class="dot green"></span> Soldados</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Alarmas -->
+    <section class="alerts-section">
+      <h3 class="section-title">🔔 Alarmas</h3>
+      <div class="alert-list" *ngIf="stats.alarmasActivas > 0; else noAlarmas">
+        <div class="alert-item green">
+          <span class="alert-dot"></span>
+          <p>Próximas vacunaciones programadas para esta semana</p>
+        </div>
+        <div class="alert-item yellow">
+          <span class="alert-dot"></span>
+          <p>Stock de algunas vacunas bajo ({{ stats.vacunasVencidas }} unidades críticas)</p>
+        </div>
+        <div class="alert-item red">
+          <span class="alert-dot"></span>
+          <p>Verificar esquemas incompletos de {{ stats.usuariosPendientes }} pacientes</p>
+        </div>
+      </div>
+      <ng-template #noAlarmas>
+        <p class="no-alerts">✅ No hay alarmas activas en este momento</p>
+      </ng-template>
+    </section>
+
+    <!-- Sección de Atajos -->
+    <section class="shortcuts-section">
+      <h3 class="section-title">⚡ Atajos</h3>
+      <div class="shortcuts-grid">
+        <button class="shortcut-btn" (click)="irA('vacunas/form')">
+          <span class="shortcut-icon">✏️</span>
+          <span class="shortcut-text">Registrar vacunación</span>
+        </button>
+
+        <button class="shortcut-btn" (click)="irA('inventario')">
+          <span class="shortcut-icon">📦</span>
+          <span class="shortcut-text">Ver inventario</span>
+        </button>
+
+        <button class="shortcut-btn" (click)="irA('reportes')">
+          <span class="shortcut-icon">📊</span>
+          <span class="shortcut-text">Generar reporte mensual</span>
+        </button>
+
+        <button class="shortcut-btn" (click)="irA('usuarios')">
+          <span class="shortcut-icon">⚙️</span>
+          <span class="shortcut-text">Configurar usuarios</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
 </div>
-

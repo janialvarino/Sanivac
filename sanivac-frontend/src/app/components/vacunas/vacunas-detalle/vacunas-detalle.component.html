@@ -1,0 +1,62 @@
+<div class="carnet-container" *ngIf="!cargando && esquema; else cargandoTpl">
+  <div class="carnet">
+    <img src="assets/img/logo-sin-fondo.png" alt="Logo" class="logo" />
+    <h2>Esquema de Vacunación</h2>
+
+    <div class="info-general">
+      <p><strong>Fecha:</strong> {{ esquema.fecha_registro | date: 'dd/MM/yyyy' }}</p>
+      <p><strong>Tipo de Carnet:</strong> {{ esquema.tipo_carnet }}</p>
+      <p><strong>Responsable:</strong> {{ vacunasPaciente[0]?.responsable || 'No registrado' }}</p>
+    </div>
+
+    <div class="paciente-info">
+      <h3>Información del Paciente</h3>
+      <p><strong>Nombre:</strong> {{ datosUsuario?.primer_nombre }} {{ datosUsuario?.primer_apellido }}</p>
+      <p><strong>Identificación:</strong> {{ datosUsuario?.numero_id || '---' }}</p>
+    </div>
+
+    <div class="detalle-vacunas">
+      <h3>Detalles de Vacunación</h3>
+      <table *ngIf="vacunasPaciente.length > 0; else sinVacunas">
+        <thead>
+          <tr>
+            <th>Vacuna</th>
+            <th>Dosis</th>
+            <th>Vía</th>
+            <th>Sitio</th>
+            <th>Fecha Aplicación</th>
+            <th>Fecha próxima dosis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let vacuna of vacunasPaciente">
+            <td>{{ vacuna.nombre_vacuna }}</td>
+            <td>{{ vacuna.dosis }}</td>
+            <td>{{ vacuna.via || 'N/A' }}</td>
+            <td>{{ vacuna.sitio || 'N/A' }}</td>
+            <td>{{ vacuna.fecha_aplicacion | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ vacuna.fecha_proxima_dosis ? (vacuna.fecha_proxima_dosis | date: 'dd/MM/yyyy') : 'Sin fecha' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #sinVacunas>
+        <p class="sin-datos">Este paciente aún no tiene vacunas aplicadas</p>
+      </ng-template>
+    </div>
+
+    <div class="acciones">
+      <button class="btn-print" (click)="imprimir()">🖨 Imprimir</button>
+      <button class="btn-volver" (click)="volver()">⬅ Volver</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #cargandoTpl>
+  <div class="loading">⏳ Cargando información...</div>
+</ng-template>
+
+<div *ngIf="!cargando && !esquema" class="error">
+  <p>⚠️ No se pudo cargar el esquema de vacunación</p>
+  <button (click)="volver()">Volver</button>
+</div>

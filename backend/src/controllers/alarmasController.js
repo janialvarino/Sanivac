@@ -1,20 +1,41 @@
 const Alarma = require('../models/alarmasModel');
 
-exports.obtenerAlarmas = (req, res) => {
-  Alarma.getAll((err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Error al obtener alarmas" });
-    }
+exports.listar = async (req, res) => {
+  try {
+    const results = await Alarma.getAll();
     res.json(results);
-  });
+  } catch (err) {
+    console.error('❌ Error al listar alarmas:', err);
+    res.status(500).json({ error: 'Error al listar alarmas' });
+  }
 };
 
-exports.registrarAlarma = (req, res) => {
-  const data = req.body;
-  Alarma.create(data, (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: "Error al registrar alarma" });
-    }
-    res.json({ mensaje: "Alarma registrada con éxito", id: result.insertId });
-  });
+exports.crear = async (req, res) => {
+  try {
+    const id = await Alarma.create(req.body);
+    res.json({ id });
+  } catch (err) {
+    console.error('❌ Error al crear alarma:', err);
+    res.status(500).json({ error: 'Error al crear alarma' });
+  }
+};
+
+exports.marcarAtendida = async (req, res) => {
+  try {
+    await Alarma.markAttended(req.params.id);
+    res.json({ message: 'Atendida' });
+  } catch (err) {
+    console.error('❌ Error al marcar atendida:', err);
+    res.status(500).json({ error: 'Error al marcar' });
+  }
+};
+
+exports.pendientesCount = async (req, res) => {
+  try {
+    const result = await Alarma.getPendingCount();
+    res.json(result);
+  } catch (err) {
+    console.error('❌ Error al obtener pendientes:', err);
+    res.status(500).json({ error: 'Error' });
+  }
 };

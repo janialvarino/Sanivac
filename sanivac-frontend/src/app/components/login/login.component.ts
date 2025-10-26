@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -21,24 +21,25 @@ export class LoginComponent {
 
   login() {
     this.error = '';
+    
     if (!this.username || !this.password) {
       this.error = 'Por favor completa todos los campos';
       return;
     }
 
     this.loading = true;
+    
     this.authService.login(this.username, this.password).subscribe({
-  next: (usuario) => {
-    console.log("✅ Usuario autenticado:", usuario); // 👀 debug
-    this.loading = false;
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-    this.router.navigate(['/dashboard']);
-  },
-  error: (err) => {
-    console.error("❌ Error en login:", err);
-    this.loading = false;
-    this.error = 'Credenciales inválidas';
-  }
+      next: (usuario) => {
+        console.log("✅ Usuario autenticado:", usuario);
+        this.loading = false;
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        console.error("❌ Error en login:", err);
+        this.loading = false;
+        this.error = err.error?.error || 'Error al iniciar sesión';
+      }
     });
   }
 }
