@@ -21,15 +21,26 @@ router.get('/', async (req, res) => {
     // Total de pacientes registrados
     const [totalPacientes] = await db.query(`SELECT COUNT(*) AS total FROM usuarios`);
 
-    // 🚨 Alarmas activas
-    const [alarmas] = await db.query(`SELECT COUNT(*) AS activas FROM alarmas WHERE estado = 'Activa'`);
+    // 🚨 Alarmas activas (CORREGIDO: usar 'pendiente' en lugar de 'Activa')
+    const [alarmas] = await db.query(`
+      SELECT COUNT(*) AS activas 
+      FROM alarmas 
+      WHERE estado = 'pendiente'
+    `);
+
+    console.log('📊 Datos del dashboard:', {
+      vacunas: vacunas[0],
+      pacientes: pacientes[0],
+      totalPacientes: totalPacientes[0],
+      alarmas: alarmas[0]
+    });
 
     // 🧮 Armar los datos del dashboard
     const data = {
       vacunas: {
         disponibles: vacunas?.[0]?.disponibles || 0,
         aplicadas: vacunas?.[0]?.aplicadas || 0,
-        agotadas: Math.max(0, ((vacunas?.[0]?.aplicadas || 0) + (vacunas?.[0]?.disponibles || 0)) - (vacunas?.[0]?.disponibles || 0))
+        agotadas: 0
       },
       pacientes: {
         vacunados: pacientes?.[0]?.vacunados || 0,

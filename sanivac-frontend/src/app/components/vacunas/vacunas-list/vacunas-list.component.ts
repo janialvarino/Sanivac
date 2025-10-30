@@ -55,14 +55,14 @@ export class VacunasListComponent implements OnInit {
   }
 
   verEsquema(vacuna: any) {
-    console.log('🔍 Ver esquema para usuario:', vacuna.usuario_id);
-    
-    if (!vacuna.usuario_id) {
-      alert('❌ No se encontró el ID del usuario');
-      return;
-    }
-
-    // Navegar directamente al detalle - el componente se encargará de crear el esquema si no existe
-    this.router.navigate(['/vacunas/detalle', vacuna.usuario_id]);
+  console.log('🔍 Ver esquema para usuario:', vacuna.usuario_id);
+  
+  if (!vacuna.usuario_id) {
+    alert('❌ No se encontró el ID del usuario');
+    return;
   }
+
+  this.router.navigate(['/vacunas/detalle', vacuna.usuario_id]);
+}
+  
 }

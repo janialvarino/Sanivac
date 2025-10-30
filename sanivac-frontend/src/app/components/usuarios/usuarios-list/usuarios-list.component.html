@@ -5,49 +5,63 @@
       <button class="btn primary" (click)="crearUsuario()">Crear usuario</button>
     </div>
   </div>
-
+  
   <div *ngIf="loading">Cargando usuarios...</div>
   <div *ngIf="error" class="error">{{ error }}</div>
-   <!-- 🔍 Barra de búsqueda -->
-<div class="busqueda">
-  <input
-    type="text"
-    placeholder="Buscar por número de identificación..."
-    [(ngModel)]="terminoBusqueda"
-    (input)="buscar()"
-  />
-</div>
-
+  
+  <!-- 🔍 Barra de búsqueda -->
+  <div class="busqueda">
+    <input
+      type="text"
+      placeholder="Buscar por número de identificación..."
+      [(ngModel)]="terminoBusqueda"
+      (input)="buscar()"
+    />
+  </div>
+  
   <!-- ✅ Mostrar tabla solo si hay usuarios -->
-<div *ngIf="!loading && usuariosFiltrados.length" class="table-container">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Tipo Documento</th>
-        <th>Número identificación</th>
-        <th>Nombre</th>
-        <th>Teléfono</th>
-        <th>EPS</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let u of usuariosFiltrados">
-        <td>{{ u.tipo_id }}</td>
-        <td>{{ u.numero_id }}</td>
-        <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
-        <td>{{ u.telefono }}</td>
-        <td>{{ u.eps }}</td>
-        <td>
-          <button class="btn edit" (click)="editarUsuario(u.id)">Editar</button>
-          <button class="btn danger" (click)="eliminarUsuario(u.id)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+  <div *ngIf="!loading && usuariosFiltrados.length" class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Tipo Documento</th>
+          <th>Número identificación</th>
+          <th>Nombre</th>
+          <th>Edad</th>
+          <th>Teléfono</th>
+          <th>EPS</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of usuariosFiltrados">
+          <td>{{ u.tipo_id }}</td>
+          <td>{{ u.numero_id }}</td>
+          <td>{{ u.primer_nombre }} {{ u.primer_apellido }}</td>
+          <td>{{ calcularEdad(u.fecha_nacimiento) }} años</td>
+          <td>{{ u.telefono }}</td>
+          <td>{{ u.eps }}</td>
+          <td>
+            <button class="btn edit" (click)="editarUsuario(u.id)">Editar</button>
+            <button class="btn danger" (click)="confirmarEliminar(u)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
   <div *ngIf="!loading && usuarios.length === 0" class="empty">
     No hay usuarios registrados.
   </div>
 </div>
+
+<!-- Modal de confirmación -->
+<app-confirm-dialog
+  [visible]="mostrarDialogo"
+  title="Eliminar Usuario"
+  [message]="'¿Seguro que quieres eliminar a ' + (usuarioAEliminar?.primer_nombre || 'este usuario') + '?'"
+  confirmText="Eliminar"
+  cancelText="Cancelar"
+  (confirmed)="eliminarUsuario()"
+  (cancelled)="cancelarEliminacion()">
+</app-confirm-dialog>

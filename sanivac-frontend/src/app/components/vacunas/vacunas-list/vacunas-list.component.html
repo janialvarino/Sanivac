@@ -27,9 +27,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let vacuna of vacunas">
-        <td>{{ vacuna.numero_id || vacuna.identificacion }}</td>
-        <td>{{ vacuna.nombre_completo || vacuna.paciente }}</td>
-        <td>{{ vacuna.nombre_vacuna || vacuna.vacuna }}</td>
+        <td>{{ vacuna.identificacion_paciente || '---' }}</td>
+        <td>{{ vacuna.nombre_paciente || '---' }}</td>
+        <td>{{ vacuna.nombre_vacuna }}</td>
         <td>{{ vacuna.dosis }}</td>
         <td>{{ vacuna.lote }}</td>
         <td>{{ vacuna.fecha_aplicacion | date:'dd/MM/yyyy' }}</td>

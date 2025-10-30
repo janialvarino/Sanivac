@@ -18,6 +18,7 @@ router.get('/', async (req, res) => {
         a.creado_en,
         u.numero_id,
         CONCAT(u.primer_nombre, ' ', u.primer_apellido) AS nombre_completo,
+        u.telefono,
         v.fecha_proxima_dosis,
         v.nombre_vacuna,
         CASE

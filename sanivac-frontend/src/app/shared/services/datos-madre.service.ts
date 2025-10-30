@@ -11,7 +11,8 @@ export class DatosMadreService {
   constructor(private http: HttpClient) {}
 
   getByUsuario(usuarioId: number): Observable<any> {
-    return this.http.get<any>(`${this.api}/usuario/${usuarioId}`);
+    // ✅ CAMBIO: Quitar /usuario/
+    return this.http.get<any>(`${this.api}/${usuarioId}`);
   }
 
   create(data: any): Observable<any> {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { EsquemaVacunacionService } from '../../../shared/services/esquema-vacunacion.service';
 import { VacunasService } from '../../../shared/services/vacunas.service';
 import { UsuariosService } from '../../../shared/services/usuarios.service';
@@ -10,7 +10,7 @@ import { catchError } from 'rxjs/operators';
 @Component({
   selector: 'app-vacunas-detalle',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DatePipe],
   templateUrl: './vacunas-detalle.component.html',
   styleUrls: ['./vacunas-detalle.component.css']
 })
@@ -33,13 +33,13 @@ export class VacunasDetalleComponent implements OnInit {
   ngOnInit(): void {
     this.usuarioId = Number(this.route.snapshot.paramMap.get('id'));
     console.log('🔍 Cargando datos para usuario ID:', this.usuarioId);
-    
+
     if (!this.usuarioId || isNaN(this.usuarioId)) {
       this.error = 'ID de usuario inválido';
       this.cargando = false;
       return;
     }
-    
+
     this.obtenerDatos();
   }
 
@@ -68,11 +68,12 @@ export class VacunasDetalleComponent implements OnInit {
     }).subscribe({
       next: (resultado) => {
         console.log('✅ Datos cargados:', resultado);
-        
         this.datosUsuario = resultado.usuario;
         this.vacunasPaciente = resultado.vacunas || [];
-        
-        // Si no hay esquema, crearlo automáticamente
+
+        // Verificar si el campo registrado_pai llega
+        console.log('🧾 Datos usuario:', this.datosUsuario);
+
         if (!resultado.esquema || resultado.esquema.length === 0) {
           console.log('⚠️ No existe esquema, creando uno nuevo...');
           this.crearEsquemaAutomatico();
@@ -101,7 +102,6 @@ export class VacunasDetalleComponent implements OnInit {
     this.esquemaService.create(nuevoEsquema).subscribe({
       next: (response) => {
         console.log('✅ Esquema creado exitosamente:', response);
-        // Recargar el esquema recién creado
         this.esquemaService.getByPaciente(this.usuarioId).subscribe({
           next: (data) => {
             this.esquema = data && data.length > 0 ? data[0] : null;
@@ -119,6 +119,13 @@ export class VacunasDetalleComponent implements OnInit {
         this.cargando = false;
       }
     });
+  }
+
+  get responsable(): string {
+    if (this.vacunasPaciente.length > 0 && this.vacunasPaciente[0]?.responsable) {
+      return this.vacunasPaciente[0].responsable;
+    }
+    return 'No registrado';
   }
 
   imprimir() {

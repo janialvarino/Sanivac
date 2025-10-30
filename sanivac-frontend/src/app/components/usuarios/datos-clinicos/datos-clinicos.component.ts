@@ -23,7 +23,7 @@ export class DatosClinicosComponent implements OnInit {
   usuarioId!: number;
   usuario: any = {};
   esMenor: boolean = false;
-  tabActiva: string = 'madre';
+  tabActiva: string = 'complementarios';
   
   cargando: boolean = false;
   guardando: boolean = false;
@@ -77,10 +77,16 @@ export class DatosClinicosComponent implements OnInit {
 
   verificarTipoUsuario() {
     const tipo = this.usuario.tipo_id?.toUpperCase() || '';
-    this.esMenor = tipo === 'REGISTRO CIVIL' || tipo === 'TARJETA DE IDENTIDAD';
     
-    // Establecer tab inicial según tipo
-    this.tabActiva = this.esMenor ? 'madre' : 'antecedentes';
+    // ✅ CORREGIDO: Detectar menores correctamente
+    this.esMenor = tipo === 'REGISTRO CIVIL' || 
+                   tipo === 'TARJETA DE IDENTIDAD' ||
+                   tipo === 'RC' || 
+                   tipo === 'TI' ||
+                   tipo.startsWith('T');  // T1, TI, etc.
+    
+    // ✅ Tab inicial siempre "complementarios"
+    this.tabActiva = 'complementarios';
     
     console.log('👤 Usuario tipo:', tipo, '| Es menor:', this.esMenor);
   }
@@ -184,6 +190,7 @@ export class DatosClinicosComponent implements OnInit {
       regimen_afiliacion: '',
       aseguradora: '',
       pertenencia_etnica: '',
+      registrado_PAI: 0,
       desplazado: 0,
       discapacitado: 0,
       fallecido: 0,
@@ -289,12 +296,15 @@ export class DatosClinicosComponent implements OnInit {
   }
 
   guardarComplementarios() {
+    console.log('💾 Guardando datos complementarios:', this.datosComplementarios);
+    
     const servicio = this.datosComplementarios.id
       ? this.complementariosService.update(this.datosComplementarios.id, this.datosComplementarios)
       : this.complementariosService.create(this.datosComplementarios);
 
     servicio.subscribe({
       next: (res) => {
+        console.log('✅ Respuesta del servidor:', res);
         if (!this.datosComplementarios.id && res.id) this.datosComplementarios.id = res.id;
         alert('✅ Datos complementarios guardados correctamente');
         this.guardando = false;
@@ -384,23 +394,23 @@ export class DatosClinicosComponent implements OnInit {
   }
 
   // ============================================
-  // UTILIDADES PARA EL TEMPLATE
+  // UTILIDADES PARA EL TEMPLATE - ✅ CORREGIDO
   // ============================================
 
   get tabsMenor() {
     return [
+      { id: 'complementarios', titulo: 'Datos Complementarios', icono: '📋' },
       { id: 'madre', titulo: 'Datos de la Madre', icono: '👩' },
       { id: 'cuidador', titulo: 'Datos del Cuidador', icono: '👨‍👩‍👧' },
-      { id: 'antecedentes', titulo: 'Antecedentes Médicos', icono: '🩺' },
-      { id: 'complementarios', titulo: 'Datos Complementarios', icono: '📋' }
+      { id: 'antecedentes', titulo: 'Antecedentes Médicos', icono: '🩺' }
     ];
   }
 
   get tabsAdulto() {
     return [
-      { id: 'antecedentes', titulo: 'Antecedentes Médicos', icono: '🩺' },
       { id: 'complementarios', titulo: 'Datos Complementarios', icono: '📋' },
-      { id: 'condicion', titulo: 'Condición Usuaria', icono: '🤰' }
+      { id: 'condicion', titulo: 'Condición Usuaria', icono: '🤰' },
+      { id: 'antecedentes', titulo: 'Antecedentes Médicos', icono: '🩺' }
     ];
   }
 

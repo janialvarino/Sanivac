@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class VacunasService {
-  private apiUrl = 'http://localhost:3000/api/vacunas'; // Cambia si usas otro puerto o ruta
+  private apiUrl = 'http://localhost:3000/api/vacunas'; // Asegúrate de usar el puerto correcto
 
   constructor(private http: HttpClient) {}
 
@@ -15,9 +15,10 @@ export class VacunasService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
+  // Obtener vacunas por usuario
   getVacunasPorUsuario(id: number): Observable<any[]> {
-  return this.http.get<any[]>(`${this.apiUrl}/usuario/${id}`);
-}
+    return this.http.get<any[]>(`${this.apiUrl}/usuario/${id}`);
+  }
 
   // Obtener vacuna por ID
   getVacunaPorId(id: number): Observable<any> {

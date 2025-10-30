@@ -11,6 +11,13 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
     const usuario = this.authService.getUsuario();
 
+    // 🏠 Si accede a raíz, cerrar sesión
+    if (state.url === '/' || state.url === '') {
+      this.authService.logout();
+      this.router.navigate(['/login']);
+      return false;
+    }
+
     if (!usuario) {
       // 🔒 No autenticado → redirigir al login
       this.router.navigate(['/login']);

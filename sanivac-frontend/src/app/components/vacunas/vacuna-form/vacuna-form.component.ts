@@ -21,7 +21,8 @@ export class VacunaFormComponent implements OnInit {
     laboratorio: '', // ✅ NUEVO
     dosis: '',
     lote: '',
-    lote_diluyente: '', // ✅ NUEVO
+    lote_diluyente: '', 
+    diluyente:'',// ✅ NUEVO
     lote_jeringa: '', // ✅ NUEVO
     tipo_jeringa: '', // ✅ NUEVO
     via_administracion: '',

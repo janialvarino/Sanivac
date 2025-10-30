@@ -6,6 +6,10 @@ const UsuariosController = {
   getAll: async (req, res) => {
     try {
       const usuarios = await UsuariosModel.getAll();
+      // Agregar edad a cada usuario
+      usuarios.forEach(usuario => {
+        usuario.edad = UsuariosModel.calcularEdad(usuario.fecha_nacimiento);
+      });
       res.json(usuarios);
     } catch (err) {
       console.error('❌ Error al obtener usuarios:', err);
@@ -20,6 +24,9 @@ const UsuariosController = {
       if (!usuario) {
         return res.status(404).json({ error: 'Usuario no encontrado' });
       }
+    
+      // Agregar edad calculada
+      usuario.edad = UsuariosModel.calcularEdad(usuario.fecha_nacimiento);
       res.json(usuario);
     } catch (err) {
       console.error('❌ Error al obtener usuario:', err);

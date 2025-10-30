@@ -1,6 +1,6 @@
 :root {
   --azul-header: #4a7c59;
-  --verde: #66bb6a;
+  --verde: #4a7c59
   --azul: #42a5f5;
   --amarillo: #ffca28;
   --rojo: #ef5350;
@@ -27,7 +27,7 @@ body {
 
 /* HEADER */
 .main-header {
-  background: linear-gradient(135deg, #4a7c59 0%, #2e7d32 100%);
+  background: linear-gradient(135deg, #4e7c31  0%, #4e7c31 100%);
   padding: 24px 40px;
   box-shadow: 0 2px 8px var(--sombra);
 }

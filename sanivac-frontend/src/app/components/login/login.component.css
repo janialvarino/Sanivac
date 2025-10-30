@@ -25,6 +25,7 @@
 .login-image img {
   width: 300px;
   max-width: 100%;
+  border-radius: 20px; /* ✅ AGREGADO */
 }
 
 .frase {

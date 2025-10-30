@@ -3,12 +3,12 @@
   <div class="card-header">
     <h2>🏥 Datos Clínicos del Paciente</h2>
     <div class="header-info">
-      <span class="usuario-id">Usuario ID: {{usuarioId}}</span>
+      <span class="usuario-id">Usuario : {{usuarioId}}</span>
       <span class="usuario-nombre" *ngIf="usuario">
         {{usuario.primer_nombre}} {{usuario.primer_apellido}}
       </span>
       <span class="usuario-tipo" [class.menor]="esMenor">
-        {{esMenor ? ' Menor de Edad' : ' Adulto'}}
+        {{esMenor ? '👶 Menor de Edad' : '👤 Adulto'}}
       </span>
     </div>
   </div>
@@ -32,6 +32,182 @@
 
     <!-- Tab Content -->
     <div class="tab-content">
+
+      <!-- ============ TAB: DATOS COMPLEMENTARIOS (Todos) ============ -->
+      <div *ngIf="tabActiva === 'complementarios'" class="form-section">
+        <h3 class="section-title">📋 Datos Complementarios</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Sexo</label>
+            <select [(ngModel)]="datosComplementarios.sexo" name="sexo">
+              <option value="">Seleccione...</option>
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMENINO">Femenino</option>
+              <option value="INTERSEXUAL">Intersexual</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Género</label>
+            <input type="text" [(ngModel)]="datosComplementarios.genero" name="genero">
+          </div>
+
+          <div class="form-group">
+            <label>Orientación Sexual</label>
+            <input type="text" [(ngModel)]="datosComplementarios.orientacion_sexual" name="orientacion">
+          </div>
+
+          <div class="form-group">
+            <label>Edad Gestacional</label>
+            <input type="text" [(ngModel)]="datosComplementarios.edad_gestacional" 
+                   name="edad_gest" placeholder="Ej: 38 semanas">
+          </div>
+
+          <div class="form-group">
+            <label>País de Nacimiento</label>
+            <input type="text" [(ngModel)]="datosComplementarios.pais_nacimiento" name="pais_nac">
+          </div>
+
+          <div class="form-group">
+            <label>Estatus Migratorio</label>
+            <input type="text" [(ngModel)]="datosComplementarios.estatus_migratorio" name="estatus_mig">
+          </div>
+
+          <div class="form-group">
+            <label>Lugar de Parto</label>
+            <input type="text" [(ngModel)]="datosComplementarios.lugar_parto" name="lugar_parto">
+          </div>
+
+          <div class="form-group">
+            <label>Régimen de Afiliación</label>
+            <select [(ngModel)]="datosComplementarios.regimen_afiliacion" name="regimen_comp">
+              <option value="">Seleccione...</option>
+              <option value="CONTRIBUTIVO">Contributivo</option>
+              <option value="SUBSIDIADO">Subsidiado</option>
+              <option value="ESPECIAL">Especial</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Aseguradora (EPS)</label>
+            <input type="text" [(ngModel)]="datosComplementarios.aseguradora" name="aseguradora">
+          </div>
+
+          <div class="form-group">
+            <label>Pertenencia Étnica</label>
+            <input type="text" [(ngModel)]="datosComplementarios.pertenencia_etnica" name="etnica_comp">
+          </div>
+
+          <div class="form-group">
+            <label>País de Residencia</label>
+            <input type="text" [(ngModel)]="datosComplementarios.pais_residencia" name="pais_res">
+          </div>
+
+          <div class="form-group">
+            <label>Departamento</label>
+            <input type="text" [(ngModel)]="datosComplementarios.departamento_residencia" name="depto">
+          </div>
+
+          <div class="form-group">
+            <label>Municipio</label>
+            <input type="text" [(ngModel)]="datosComplementarios.municipio_residencia" name="municipio">
+          </div>
+
+          <div class="form-group">
+            <label>Comuna/Localidad</label>
+            <input type="text" [(ngModel)]="datosComplementarios.comuna_localidad" name="comuna">
+          </div>
+
+          <div class="form-group">
+            <label>Área</label>
+            <select [(ngModel)]="datosComplementarios.area" name="area">
+              <option value="">Seleccione...</option>
+              <option value="URBANA">Urbana</option>
+              <option value="RURAL">Rural</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Dirección</label>
+            <input type="text" [(ngModel)]="datosComplementarios.direccion" name="direccion">
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" [(ngModel)]="datosComplementarios.telefono" name="tel_comp">
+          </div>
+
+          <div class="form-group">
+            <label>Celular</label>
+            <input type="tel" [(ngModel)]="datosComplementarios.celular" name="cel_comp">
+          </div>
+
+          <div class="form-group full-width">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="datosComplementarios.email" name="email_comp">
+          </div>
+
+
+          <!-- Checkboxes -->
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.registradoPAI" name="registradoPAI_comp">
+               <span>¿Registrado en PAI?</span>
+                 </label>
+                 </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.desplazado" name="desplazado_comp">
+              <span>¿Es desplazado?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.discapacitado" name="discapacitado">
+              <span>¿Tiene discapacidad?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.victima_conflicto" name="victima">
+              <span>¿Víctima del conflicto?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.estudia_actualmente" name="estudia">
+              <span>¿Estudia actualmente?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.autoriza_llamadas" name="autoriza_tel">
+              <span>¿Autoriza llamadas?</span>
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="datosComplementarios.autoriza_correo" name="autoriza_email">
+              <span>¿Autoriza correos?</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn primary" (click)="guardarSeccionActual()" [disabled]="guardando">
+            <span *ngIf="!guardando">💾 Guardar Datos Complementarios</span>
+            <span *ngIf="guardando">⏳ Guardando...</span>
+          </button>
+        </div>
+      </div>
 
       <!-- ============ TAB: DATOS DE LA MADRE (Solo Menores) ============ -->
       <div *ngIf="esMenor && tabActiva === 'madre'" class="form-section">
@@ -257,173 +433,6 @@
 
           <button class="btn secondary" (click)="agregarAntecedente()">
             ➕ Agregar Antecedente
-          </button>
-        </div>
-      </div>
-
-      <!-- ============ TAB: DATOS COMPLEMENTARIOS (Todos) ============ -->
-      <div *ngIf="tabActiva === 'complementarios'" class="form-section">
-        <h3 class="section-title">📋 Datos Complementarios</h3>
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Sexo</label>
-            <select [(ngModel)]="datosComplementarios.sexo" name="sexo">
-              <option value="">Seleccione...</option>
-              <option value="MASCULINO">Masculino</option>
-              <option value="FEMENINO">Femenino</option>
-              <option value="INTERSEXUAL">Intersexual</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Género</label>
-            <input type="text" [(ngModel)]="datosComplementarios.genero" name="genero">
-          </div>
-
-          <div class="form-group">
-            <label>Orientación Sexual</label>
-            <input type="text" [(ngModel)]="datosComplementarios.orientacion_sexual" name="orientacion">
-          </div>
-
-          <div class="form-group">
-            <label>Edad Gestacional</label>
-            <input type="text" [(ngModel)]="datosComplementarios.edad_gestacional" 
-                   name="edad_gest" placeholder="Ej: 38 semanas">
-          </div>
-
-          <div class="form-group">
-            <label>País de Nacimiento</label>
-            <input type="text" [(ngModel)]="datosComplementarios.pais_nacimiento" name="pais_nac">
-          </div>
-
-          <div class="form-group">
-            <label>Estatus Migratorio</label>
-            <input type="text" [(ngModel)]="datosComplementarios.estatus_migratorio" name="estatus_mig">
-          </div>
-
-          <div class="form-group">
-            <label>Lugar de Parto</label>
-            <input type="text" [(ngModel)]="datosComplementarios.lugar_parto" name="lugar_parto">
-          </div>
-
-          <div class="form-group">
-            <label>Régimen de Afiliación</label>
-            <select [(ngModel)]="datosComplementarios.regimen_afiliacion" name="regimen_comp">
-              <option value="">Seleccione...</option>
-              <option value="CONTRIBUTIVO">Contributivo</option>
-              <option value="SUBSIDIADO">Subsidiado</option>
-              <option value="ESPECIAL">Especial</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Aseguradora (EPS)</label>
-            <input type="text" [(ngModel)]="datosComplementarios.aseguradora" name="aseguradora">
-          </div>
-
-          <div class="form-group">
-            <label>Pertenencia Étnica</label>
-            <input type="text" [(ngModel)]="datosComplementarios.pertenencia_etnica" name="etnica_comp">
-          </div>
-
-          <div class="form-group">
-            <label>País de Residencia</label>
-            <input type="text" [(ngModel)]="datosComplementarios.pais_residencia" name="pais_res">
-          </div>
-
-          <div class="form-group">
-            <label>Departamento</label>
-            <input type="text" [(ngModel)]="datosComplementarios.departamento_residencia" name="depto">
-          </div>
-
-          <div class="form-group">
-            <label>Municipio</label>
-            <input type="text" [(ngModel)]="datosComplementarios.municipio_residencia" name="municipio">
-          </div>
-
-          <div class="form-group">
-            <label>Comuna/Localidad</label>
-            <input type="text" [(ngModel)]="datosComplementarios.comuna_localidad" name="comuna">
-          </div>
-
-          <div class="form-group">
-            <label>Área</label>
-            <select [(ngModel)]="datosComplementarios.area" name="area">
-              <option value="">Seleccione...</option>
-              <option value="URBANA">Urbana</option>
-              <option value="RURAL">Rural</option>
-            </select>
-          </div>
-
-          <div class="form-group full-width">
-            <label>Dirección</label>
-            <input type="text" [(ngModel)]="datosComplementarios.direccion" name="direccion">
-          </div>
-
-          <div class="form-group">
-            <label>Teléfono</label>
-            <input type="tel" [(ngModel)]="datosComplementarios.telefono" name="tel_comp">
-          </div>
-
-          <div class="form-group">
-            <label>Celular</label>
-            <input type="tel" [(ngModel)]="datosComplementarios.celular" name="cel_comp">
-          </div>
-
-          <div class="form-group full-width">
-            <label>Email</label>
-            <input type="email" [(ngModel)]="datosComplementarios.email" name="email_comp">
-          </div>
-
-          <!-- Checkboxes -->
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" [(ngModel)]="datosComplementarios.desplazado" name="desplazado_comp">
-              <span>¿Es desplazado?</span>
-            </label>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" [(ngModel)]="datosComplementarios.discapacitado" name="discapacitado">
-              <span>¿Tiene discapacidad?</span>
-            </label>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" [(ngModel)]="datosComplementarios.victima_conflicto" name="victima">
-              <span>¿Víctima del conflicto?</span>
-            </label>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" [(ngModel)]="datosComplementarios.estudia_actualmente" name="estudia">
-              <span>¿Estudia actualmente?</span>
-            </label>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" [(ngModel)]="datosComplementarios.autoriza_llamadas" name="autoriza_tel">
-              <span>¿Autoriza llamadas?</span>
-            </label>
-          </div>
-
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" [(ngModel)]="datosComplementarios.autoriza_correo" name="autoriza_email">
-              <span>¿Autoriza correos?</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn primary" (click)="guardarSeccionActual()" [disabled]="guardando">
-            <span *ngIf="!guardando">💾 Guardar Datos Complementarios</span>
-            <span *ngIf="guardando">⏳ Guardando...</span>
           </button>
         </div>
       </div>

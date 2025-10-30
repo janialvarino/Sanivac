@@ -11,7 +11,7 @@ const DatosComplementarios = {
     const query = `
       INSERT INTO datos_complementarios 
       (usuario_id, sexo, genero, orientacion_sexual, edad_gestacional, pais_nacimiento,
-       estatus_migratorio, lugar_parto, regimen_afiliacion, aseguradora, pertenencia_etnica,
+       estatus_migratorio, lugar_parto, regimen_afiliacion, aseguradora, pertenencia_etnica, registrado_pai
        desplazado, discapacitado, fallecido, victima_conflicto, estudia_actualmente,
        pais_residencia, departamento_residencia, municipio_residencia, comuna_localidad,
        area, direccion, telefono, celular, email, autoriza_llamadas, autoriza_correo)
@@ -29,6 +29,7 @@ const DatosComplementarios = {
       data.regimen_afiliacion,
       data.aseguradora,
       data.pertenencia_etnica,
+      data.registrado_pai || 0,
       data.desplazado || 0,
       data.discapacitado || 0,
       data.fallecido || 0,
@@ -54,7 +55,7 @@ const DatosComplementarios = {
       UPDATE datos_complementarios SET
         sexo=?, genero=?, orientacion_sexual=?, edad_gestacional=?, pais_nacimiento=?,
         estatus_migratorio=?, lugar_parto=?, regimen_afiliacion=?, aseguradora=?,
-        pertenencia_etnica=?, desplazado=?, discapacitado=?, fallecido=?,
+        pertenencia_etnica=?, registrado_pai=?, desplazado=?, discapacitado=?, fallecido=?,
         victima_conflicto=?, estudia_actualmente=?, pais_residencia=?,
         departamento_residencia=?, municipio_residencia=?, comuna_localidad=?,
         area=?, direccion=?, telefono=?, celular=?, email=?, autoriza_llamadas=?,
@@ -72,6 +73,7 @@ const DatosComplementarios = {
       data.regimen_afiliacion,
       data.aseguradora,
       data.pertenencia_etnica,
+      data.registrado_pai || 0,
       data.desplazado || 0,
       data.discapacitado || 0,
       data.fallecido || 0,

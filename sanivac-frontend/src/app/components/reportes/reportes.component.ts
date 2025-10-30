@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReportesService } from '../../shared/services/reportes.service';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
 
@@ -39,13 +40,17 @@ export class ReportesComponent implements OnInit {
     totalAlarmas: 0
   };
 
-  // Datos
+  // Datos para la tabla de vacunas
   usuarios: any[] = [];
   vacunas: any[] = [];
   vacunasFiltradas: any[] = [];
+  
+  // Datos de reportes (si los usas para otra cosa)
+  reportesFiltrados: any[] = [];
+  
   cargando = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private repSrv: ReportesService, private http: HttpClient) {}
 
   ngOnInit() {
     this.generarAnios();
@@ -54,7 +59,8 @@ export class ReportesComponent implements OnInit {
 
   generarAnios() {
     const anioActual = new Date().getFullYear();
-    for (let i = anioActual; i >= anioActual - 5; i--) {
+    // Genera años desde 5 años atrás hasta 5 años adelante
+    for (let i = anioActual + 5; i >= anioActual - 5; i--) {
       this.anios.push(i);
     }
   }
@@ -71,10 +77,29 @@ export class ReportesComponent implements OnInit {
         console.log('📊 Datos cargados:', datos);
 
         this.usuarios = datos.usuarios;
-        this.vacunas = datos.vacunas;
+        this.vacunas = this.agregarInfoPaciente(datos.vacunas, datos.usuarios);
+
+        console.log('💉 Total vacunas antes de filtrar:', this.vacunas.length);
+        console.log('📅 Filtrando por mes:', this.mesSeleccionado, 'año:', this.anioSeleccionado);
+
+        // Mostrar rango de fechas disponibles
+        if (this.vacunas.length > 0) {
+          const fechas = this.vacunas
+            .map(v => new Date(v.fecha_aplicacion))
+            .sort((a, b) => a.getTime() - b.getTime());
+          
+          const fechaMin = fechas[0];
+          const fechaMax = fechas[fechas.length - 1];
+          
+          console.log('📅 Rango de datos disponibles:');
+          console.log(`   Desde: ${fechaMin.toLocaleDateString('es-CO')} (${this.meses[fechaMin.getMonth()].nombre} ${fechaMin.getFullYear()})`);
+          console.log(`   Hasta: ${fechaMax.toLocaleDateString('es-CO')} (${this.meses[fechaMax.getMonth()].nombre} ${fechaMax.getFullYear()})`);
+        }
 
         // Filtrar vacunas por mes y año
         this.filtrarVacunas();
+
+        console.log('💉 Vacunas después de filtrar:', this.vacunasFiltradas.length);
 
         // Estadísticas
         this.stats.totalUsuarios = datos.usuarios.length;
@@ -92,39 +117,89 @@ export class ReportesComponent implements OnInit {
     });
   }
 
+  agregarInfoPaciente(vacunas: any[], usuarios: any[]) {
+    // Une los datos del paciente con las vacunas por usuario_id
+    return vacunas.map(v => {
+      const usuario = usuarios.find(u => u.id === v.usuario_id);
+      return {
+        ...v,
+        nombre_paciente: usuario
+          ? `${usuario.primer_nombre} ${usuario.primer_apellido}`
+          : 'Desconocido',
+        numero_id: usuario ? usuario.numero_id : '---'
+      };
+    });
+  }
+
   filtrarVacunas() {
+    // Convertir a números para asegurar comparación correcta
+    const mesNumero = Number(this.mesSeleccionado);
+    const anioNumero = Number(this.anioSeleccionado);
+    
     this.vacunasFiltradas = this.vacunas.filter(v => {
       if (!v.fecha_aplicacion) return false;
+      
       const fecha = new Date(v.fecha_aplicacion);
-      return fecha.getMonth() + 1 === this.mesSeleccionado &&
-             fecha.getFullYear() === this.anioSeleccionado;
+      const mes = fecha.getMonth() + 1;
+      const anio = fecha.getFullYear();
+      
+      return mes === mesNumero && anio === anioNumero;
     });
+    
+    console.log(`📊 ${this.vacunasFiltradas.length} vacunas encontradas para ${this.meses[mesNumero - 1]?.nombre} ${anioNumero}`);
     this.stats.totalVacunas = this.vacunasFiltradas.length;
   }
 
-  // 📥 Descargar Excel con todos los datos
+  // 📥 Descargar Excel con datos filtrados
   descargarExcel() {
     const nombreMes = this.meses.find(m => m.num === this.mesSeleccionado)?.nombre;
-    
-    this.http.post('http://localhost:3000/api/reportes/generar-excel', {
-      mes: this.mesSeleccionado,
-      anio: this.anioSeleccionado,
-      nombreMes: nombreMes
-    }, {
+
+    this.http
+      .post(
+        'http://localhost:3000/api/reportes/generar-excel',
+        {
+          mes: this.mesSeleccionado,
+          anio: this.anioSeleccionado,
+          nombreMes: nombreMes
+        },
+        {
+          responseType: 'blob',
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `Reporte_Sanivac_${nombreMes}_${this.anioSeleccionado}.xlsx`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+          console.log('✅ Excel descargado');
+        },
+        error: (err) => {
+          console.error('❌ Error al descargar Excel:', err);
+          alert('Error al generar el reporte Excel');
+        }
+      });
+  }
+
+  // 🟢 Descargar template original (si lo necesitas)
+  descargarTemplate() {
+    this.http.get('http://localhost:3000/api/reportes/descargar-template', {
       responseType: 'blob'
     }).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `Reporte_Sanivac_${nombreMes}_${this.anioSeleccionado}.xlsx`;
+        a.download = 'REGISTRO DIARIO ESQUEMA REGULAR.xlsm';
         a.click();
         window.URL.revokeObjectURL(url);
-        console.log('✅ Excel descargado');
       },
       error: (err) => {
-        console.error('❌ Error al descargar Excel:', err);
-        alert('Error al generar el reporte Excel');
+        console.error('❌ Error al descargar template:', err);
+        alert('Error al descargar la plantilla Excel.');
       }
     });
   }
@@ -132,5 +207,16 @@ export class ReportesComponent implements OnInit {
   // 🖨️ Imprimir reporte
   imprimir() {
     window.print();
+  }
+
+  // 🔧 TrackBy functions para optimizar el renderizado de Angular
+  // Estos métodos ayudan a Angular a identificar qué elementos cambiaron
+  // en lugar de re-renderizar toda la lista
+  trackByUsuarioId(index: number, item: any): number {
+    return item?.id || index;
+  }
+
+  trackByVacunaId(index: number, item: any): number {
+    return item?.id || index;
   }
 }

@@ -21,10 +21,12 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.actualizarEstado();
 
-    this.router.events.pipe(filter(ev => ev instanceof NavigationEnd))
-      .subscribe(() => {
-        this.actualizarEstado();
-      });
+     this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      if (event.url === '/' || event.url === '') {
+        this.authService.logout();
+      }});
   }
 
   actualizarEstado() {

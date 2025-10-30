@@ -11,7 +11,7 @@ router.get('/alarmas', reportesModel.reporteAlarmas);
 router.get('/vacunacion-completo', reportesModel.reporteVacunacionCompleto);
 
 // 📥 Exportar a Excel
-router.get('/exportar/todo', reportesController.exportarTodo);
+router.post('/generar-excel', reportesController.exportarTodo);
 router.get('/exportar/vacunas', reportesController.exportarVacunas);
 router.get('/exportar/inventario', reportesController.exportarInventario);
 

@@ -52,7 +52,6 @@ export class AlarmasListComponent implements OnInit {
     });
   }
 
-  // Obtener clase CSS según el estado
   getEstadoClase(alarma: any): string {
     if (alarma.estado === 'atendida') {
       return 'vacunado';
@@ -68,7 +67,6 @@ export class AlarmasListComponent implements OnInit {
     }
   }
 
-  // Obtener texto del estado
   getEstadoTexto(alarma: any): string {
     if (alarma.estado === 'atendida') {
       return '✅ Vacunado';
@@ -86,7 +84,6 @@ export class AlarmasListComponent implements OnInit {
     }
   }
 
-  // Verificar si puede marcar como atendida
   puedeMarcar(alarma: any): boolean {
     return alarma.estado !== 'atendida';
   }

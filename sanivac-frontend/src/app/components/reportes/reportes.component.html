@@ -1,5 +1,4 @@
 <div class="reportes-container">
-  
   <!-- Header -->
   <div class="reportes-header">
     <div class="header-content">
@@ -11,7 +10,6 @@
   </div>
 
   <div class="reportes-content">
-
     <!-- Filtros -->
     <section class="filtros-section">
       <div class="filtros-card">
@@ -32,17 +30,14 @@
           </div>
 
           <div class="filtro-actions">
-            <button class="btn-primary" (click)="cargarDatos()">
-              <span class="btn-icon">🔄</span>
-              Actualizar
+            <button class="btn-primary" (click)="cargarDatos()" [disabled]="cargando">
+              🔄 {{ cargando ? 'Cargando...' : 'Actualizar' }}
             </button>
-            <button class="btn-success" (click)="descargarExcel()">
-              <span class="btn-icon">📥</span>
-              Descargar Excel
+            <button class="btn-success" (click)="descargarExcel()" [disabled]="cargando">
+              📥 Descargar Excel
             </button>
-            <button class="btn-secondary" (click)="imprimir()">
-              <span class="btn-icon">🖨️</span>
-              Imprimir
+            <button class="btn-secondary" (click)="imprimir()" [disabled]="cargando">
+              🖨️ Imprimir
             </button>
           </div>
         </div>
@@ -84,16 +79,15 @@
       </div>
     </section>
 
-    <!-- Loading -->
-    <div *ngIf="cargando" class="loading-overlay">
+    <!-- Mensaje de Carga -->
+    <div *ngIf="cargando" class="loading-container">
       <div class="spinner"></div>
       <p>Cargando datos del sistema...</p>
     </div>
 
-    <!-- Tablas de Datos -->
+    <!-- Tablas -->
     <div *ngIf="!cargando" class="tablas-container">
-
-      <!-- Tabla de Usuarios -->
+      <!-- Usuarios -->
       <section class="tabla-section">
         <div class="tabla-header">
           <h3>👥 Usuarios Registrados en el Sistema</h3>
@@ -105,9 +99,9 @@
               <tr>
                 <th>ID</th>
                 <th>Tipo Documento</th>
-                <th>Número ID</th>
-                <th>Nombres Completos</th>
-                <th>Apellidos Completos</th>
+                <th>Número Identificación</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
                 <th>Fecha Nacimiento</th>
                 <th>Sexo</th>
                 <th>EPS</th>
@@ -115,7 +109,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let u of usuarios">
+              <tr *ngFor="let u of usuarios; trackBy: trackByUsuarioId">
                 <td>{{ u.id }}</td>
                 <td>{{ u.tipo_id }}</td>
                 <td>{{ u.numero_id }}</td>
@@ -127,14 +121,14 @@
                 <td>{{ u.telefono || 'N/A' }}</td>
               </tr>
               <tr *ngIf="usuarios.length === 0">
-                <td colspan="9" class="no-data">No hay usuarios registrados en el sistema</td>
+                <td colspan="9" class="no-data">No hay usuarios registrados</td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
 
-      <!-- Tabla de Vacunas -->
+      <!-- Vacunas -->
       <section class="tabla-section">
         <div class="tabla-header">
           <h3>💉 Vacunas Aplicadas - {{ meses[mesSeleccionado - 1].nombre }} {{ anioSeleccionado }}</h3>
@@ -159,17 +153,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let v of vacunasFiltradas">
+              <tr *ngFor="let v of vacunasFiltradas; trackBy: trackByVacunaId">
                 <td>{{ v.id }}</td>
                 <td>{{ v.nombre_paciente }}</td>
-                <td>{{ v.numero_identificacion }}</td>
+                <td>{{ v.numero_id }}</td>
                 <td>{{ v.nombre_vacuna }}</td>
                 <td>{{ v.dosis }}</td>
                 <td>{{ v.lote }}</td>
                 <td>{{ v.via || 'N/A' }}</td>
                 <td>{{ v.sitio || 'N/A' }}</td>
                 <td>{{ v.fecha_aplicacion | date:'dd/MM/yyyy' }}</td>
-                <td>{{ v.fecha_proxima_dosis | date:'dd/MM/yyyy' }}</td>
+                <td>{{ v.fecha_proxima_dosis ? (v.fecha_proxima_dosis | date:'dd/MM/yyyy') : '---' }}</td>
                 <td>{{ v.responsable }}</td>
                 <td>{{ v.observaciones || 'N/A' }}</td>
               </tr>
@@ -180,8 +174,6 @@
           </table>
         </div>
       </section>
-
     </div>
-
   </div>
 </div>

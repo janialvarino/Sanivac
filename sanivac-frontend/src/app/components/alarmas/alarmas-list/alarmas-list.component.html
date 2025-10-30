@@ -16,6 +16,7 @@
       <tr>
         <th>Identificación</th>
         <th>Nombre Paciente</th>
+        <th>Teléfono</th>
         <th>Vacuna</th>
         <th>Dosis</th>
         <th>Fecha Próxima Dosis</th>
@@ -28,6 +29,7 @@
       <tr *ngFor="let alarma of alarmas">
         <td class="numero-id">{{ alarma.numero_id }}</td>
         <td class="nombre-paciente">{{ alarma.nombre_completo || 'N/A' }}</td>
+        <td class="telefono">{{ alarma.telefono || 'Sin teléfono' }}</td>
         <td>{{ alarma.nombre_vacuna || 'N/A' }}</td>
         <td>{{ alarma.dosis }}</td>
         <td>

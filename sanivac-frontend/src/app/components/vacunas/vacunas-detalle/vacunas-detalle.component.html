@@ -1,18 +1,41 @@
 <div class="carnet-container" *ngIf="!cargando && esquema; else cargandoTpl">
   <div class="carnet">
-    <img src="assets/img/logo-sin-fondo.png" alt="Logo" class="logo" />
-    <h2>Esquema de Vacunación</h2>
+    <div class="carnet-header">
+      <img src="assets/img/logo-sin-fondo.png" alt="Logo" class="logo" />
+      <h2>Esquema de Vacunación</h2>
+    </div>
 
     <div class="info-general">
-      <p><strong>Fecha:</strong> {{ esquema.fecha_registro | date: 'dd/MM/yyyy' }}</p>
-      <p><strong>Tipo de Carnet:</strong> {{ esquema.tipo_carnet }}</p>
-      <p><strong>Responsable:</strong> {{ vacunasPaciente[0]?.responsable || 'No registrado' }}</p>
+      <div class="info-row">
+        <span class="label">Fecha:</span>
+        <span class="value">{{ esquema.fecha_registro | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Tipo de Carnet:</span>
+        <span class="value">{{ esquema.tipo_carnet }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Responsable:</span>
+        <span class="value">{{ responsable }}</span>
+      </div>
     </div>
 
     <div class="paciente-info">
       <h3>Información del Paciente</h3>
-      <p><strong>Nombre:</strong> {{ datosUsuario?.primer_nombre }} {{ datosUsuario?.primer_apellido }}</p>
-      <p><strong>Identificación:</strong> {{ datosUsuario?.numero_id || '---' }}</p>
+
+      <div class="info-row">
+        <span class="label">Nombre:</span>
+        <span class="value">{{ datosUsuario?.primer_nombre }} {{ datosUsuario?.primer_apellido }}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">Identificación:</span>
+        <span class="value">{{ datosUsuario?.numero_id || '---' }}</span>
+      </div>
+      <!-- ✅ Nuevo campo: Registrado en PAI -->
+      <div class="info-row">
+        <span class="label">Registrado en PAI:</span>
+        <span class="value">{{ datosUsuario?.registrado_pai ? 'Sí' : 'No' }}</span>
+      </div>
     </div>
 
     <div class="detalle-vacunas">
@@ -25,15 +48,15 @@
             <th>Vía</th>
             <th>Sitio</th>
             <th>Fecha Aplicación</th>
-            <th>Fecha próxima dosis</th>
+            <th>Fecha Próxima Dosis</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let vacuna of vacunasPaciente">
             <td>{{ vacuna.nombre_vacuna }}</td>
             <td>{{ vacuna.dosis }}</td>
-            <td>{{ vacuna.via || 'N/A' }}</td>
-            <td>{{ vacuna.sitio || 'N/A' }}</td>
+            <td>{{ vacuna.via_administracion || 'N/A' }}</td>
+            <td>{{ vacuna.sitio_aplicacion || 'N/A' }}</td>
             <td>{{ vacuna.fecha_aplicacion | date: 'dd/MM/yyyy' }}</td>
             <td>{{ vacuna.fecha_proxima_dosis ? (vacuna.fecha_proxima_dosis | date: 'dd/MM/yyyy') : 'Sin fecha' }}</td>
           </tr>
