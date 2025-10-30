@@ -11,25 +11,17 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree {
     const usuario = this.authService.getUsuario();
 
-    // 🏠 Si accede a raíz, cerrar sesión
-    if (state.url === '/' || state.url === '') {
-      this.authService.logout();
-      this.router.navigate(['/login']);
-      return false;
-    }
-
+    // 🔥 Si intenta acceder a la raíz sin sesión
     if (!usuario) {
-      // 🔒 No autenticado → redirigir al login
-      this.router.navigate(['/login']);
-      return false;
+      console.log('🔒 Usuario no autenticado, redirigiendo al login');
+      return this.router.createUrlTree(['/login']);
     }
 
     // 🔑 Validar roles
     const rolesPermitidos = route.data?.['roles'];
     if (rolesPermitidos && !rolesPermitidos.includes(usuario.rol)) {
       alert('⚠️ No tienes permiso para acceder a esta sección.');
-      this.router.navigate(['/dashboard']);
-      return false;
+      return this.router.createUrlTree(['/inventario']);
     }
 
     // ✅ Todo correcto → permitir acceso

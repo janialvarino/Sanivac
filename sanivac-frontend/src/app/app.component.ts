@@ -1,9 +1,9 @@
-// src/app/app.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from './shared/services/auth.service';
-import { filter } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -12,32 +12,30 @@ import { filter } from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  isLoggedIn = false;
+export class AppComponent {
+  mostrarNavbar$!: Observable<boolean>;
   rol: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    // 🔥 Combina: estar autenticado Y no estar en login
+    this.mostrarNavbar$ = combineLatest([
+      this.authService.usuario$.pipe(map(usuario => usuario !== null)),
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd),
+        map((event: NavigationEnd) => event.url !== '/login' && event.url !== '/')
+      )
+    ]).pipe(
+      map(([estaAutenticado, noEsLogin]) => estaAutenticado && noEsLogin)
+    );
 
-  ngOnInit() {
-    this.actualizarEstado();
-
-     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      if (event.url === '/' || event.url === '') {
-        this.authService.logout();
-      }});
-  }
-
-  actualizarEstado() {
-    this.isLoggedIn = this.authService.isLoggedIn();
-    const usuario = this.authService.getUsuario();
-    this.rol = usuario ? usuario.rol : null;
+    // Escuchar cambios en el usuario para actualizar el rol
+    this.authService.usuario$.subscribe(usuario => {
+      this.rol = usuario ? usuario.rol : null;
+    });
   }
 
   cerrarSesion() {
     this.authService.logout();
-    this.isLoggedIn = false;
     this.router.navigate(['/login']);
   }
 }

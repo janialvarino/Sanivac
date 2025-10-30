@@ -1,5 +1,5 @@
-<!-- src/app/app.component.html -->
-<div class="navbar-container" *ngIf="isLoggedIn">
+<!-- 🔥 Ahora usa mostrarNavbar$ en vez de estaAutenticado$ -->
+<div class="navbar-container" *ngIf="mostrarNavbar$ | async">
   <nav class="navbar">
     <!-- 🔹 Logo y nombre -->
     <div class="navbar-left">
